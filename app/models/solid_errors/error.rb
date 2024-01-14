@@ -1,5 +1,7 @@
 module SolidErrors
   class Error < Record
+    self.table_name = "solid_errors"
+
     SEVERITY_TO_EMOJI = {
       error: "🔥",
       warning: "⚠️",

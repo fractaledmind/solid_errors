@@ -1,6 +1,6 @@
 class CreateSolidErrorsTables < ActiveRecord::Migration[7.1]
   def change
-    create_table :errors do |t|
+    create_table :solid_errors do |t|
       t.string :exception_class, null: false
       t.string :message, null: false
       t.string :severity, null: false
@@ -12,7 +12,7 @@ class CreateSolidErrorsTables < ActiveRecord::Migration[7.1]
       t.index [:exception_class, :message, :severity, :source], unique: true
     end
 
-    create_table :occurrences do |t|
+    create_table :solid_errors_occurrences do |t|
       t.belongs_to :error, null: false, foreign_key: true
       t.text :backtrace
       t.json :context
