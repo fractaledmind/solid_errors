@@ -1,0 +1,8 @@
+Description:
+    Installs solid_errors as a Rails error subscriber
+
+Example:
+    bin/rails generate solid_errors:install
+
+    This will perform the following:
+        Installs solid_errors migrations

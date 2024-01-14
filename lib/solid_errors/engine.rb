@@ -4,10 +4,6 @@ module SolidErrors
   class Engine < ::Rails::Engine
     isolate_namespace SolidErrors
 
-    rake_tasks do
-      load "solid_errors/tasks.rb"
-    end
-
     config.solid_errors = ActiveSupport::OrderedOptions.new
 
     initializer "solid_errors.config" do
