@@ -1,0 +1,25 @@
+<% titled ||= false %>
+
+<section id="occurrences" class="sm:rounded-md mt-4 -mx-2 sm:mx-0">
+  <% if titled %>
+    <div class="flex justify-between items-center mb-3 border-b">
+      <h2 class="font-bold text-2xl">
+        Occurrences
+      </h2>
+      <p class="text-right">
+        Total: <strong><%= occurrences.size %></strong>
+      </p>
+    </div>
+  <% end %>
+
+  <div class="min-w-full">
+    <% if occurrences.any? %>
+      <%= render occurrences %>
+    <% else %>
+      <div class="flex items-center justify-center gap-2">
+        <%= bootstrap_svg "list-ul" %>
+        <span class="text-2xl">No occurrences yet&hellip;</span>
+      </div>
+    <% end %>
+  </div>
+</section>

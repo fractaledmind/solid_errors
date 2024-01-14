@@ -1,0 +1,46 @@
+<% seen_at = occurrence.created_at %>
+<% backtrace = occurrence.parsed_backtrace %>
+
+<%= tag.section id: dom_id(occurrence), class: "" do %>
+  <%= tag.details open: occurrence_counter.zero? do %>
+    <summary class="hover:bg-gray-50 p-2 rounded cursor-pointer">
+      <%= time_tag seen_at, seen_at %>
+      (<em><%= time_ago_in_words(seen_at) %> ago</em>)
+    </summary>
+    <div class="">
+      <dl class="ml-6">
+        <% occurrence.context&.each do |key, value| %>
+          <div class="flex items-center justify-between flex-wrap gap-x-2">
+            <dt class="font-bold">
+              <%= SolidErrors::Occurrence.human_attribute_name(key) %>
+            </dt>
+            <dd class="">
+              <%= value %>
+            </dd>
+          </div>
+        <% end %>
+        <div class="">
+          <dt class="font-bold">
+            <%= SolidErrors::Occurrence.human_attribute_name(:backtrace) %>
+          </dt>
+          <dd class="">
+            <% backtrace.lines.each_with_index do |line, i| %>
+              <%= tag.details open: line.application? || i.zero? do %>
+                <summary class="hover:bg-gray-50 px-2 py-1 rounded cursor-pointer">
+                  <span class="text-gray-500"><%= File.dirname(line.filtered_file) %>/</span><span class="text-blue-500"><%= File.basename(line.filtered_file) %></span>:<span class="text-gray-900"><%= line.filtered_number %></span>
+                  <span class="text-gray-500">in</span>
+                  <code class="text-green-500"><%= line.filtered_method %></code>
+                </summary>
+                <div><pre class="debug_dump"><code class="torchlight"><% line.source.each do |n, code| %>
+                  <div class="line"><span class="mr-2 text-right select-none text-gray-600"><%= n %></span><span><%= code %></span></div>
+                  <% end %></code></pre></div>
+              <% end %>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  <% end %>
+<% end %>
+
+<hr class="mt-4 pb-4">

@@ -1,0 +1,24 @@
+<tr class="even:bg-gray-50 align-top">
+  <td scope="col" class="whitespace-wrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-3">
+    <div>
+      <%= error.emoji %>
+      <%= link_to error_path(error), class: "text-blue-400 underline inline-flex items-baseline gap-1" do %>
+        <strong><code><%= error.exception_class %></code></strong>
+      <% end %>
+      from
+      <em><code><%= error.source %></code></em>
+    </div>
+    <pre class="ml-6 mt-4"><%= error.message %></pre>
+  </td>
+  <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
+    <%= error.occurrences.size %>
+  </td>
+  <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
+    <%= time_ago_in_words error.occurrences.maximum(:created_at), scope: 'datetime.distance_in_words.short' %>
+  </td>
+  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+    <%= button_to error_path(error), method: :patch, class: button_classes(type: :primary_ghost), params: { error: { resolved_at: Time.now } } do %>
+      Resolve<span class="sr-only">, Error #<%= error.id %></span>
+    <% end %>
+  </td>
+</tr>

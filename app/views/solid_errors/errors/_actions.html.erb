@@ -1,0 +1,12 @@
+<div class="inline-flex items-center justify-start flex-wrap gap-3 whitespace-nowrap">
+  <% if current_controller.errors? && !current_action.errors_index? %>
+    <%= link_to errors_path, class: button_classes(icon: true) do %>
+      <%= bootstrap_svg "arrow-left" %>
+      <span>Back to errors</span>
+    <% end %>
+  <% end %>
+
+  <%= button_to error_path(error), method: :patch, class: button_classes(type: :primary_ghost), params: { error: { resolved_at: Time.now } } do %>
+    Resolve Error<span class="sr-only"> #<%= error.id %></span>
+  <% end %>
+</div>
