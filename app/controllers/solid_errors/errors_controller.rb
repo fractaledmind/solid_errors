@@ -6,13 +6,10 @@ module SolidErrors
     def index
       errors_table = Error.arel_table
       occurrences_table = Occurrence.arel_table
-      recent_occurrence = occurrences_table
-        .project(occurrences_table[:created_at].maximum)
-        .as('recent_occurrence')
 
       @errors = Error.unresolved
                      .joins(:occurrences)
-                     .select(errors_table[Arel.star], recent_occurrence)
+                     .select(errors_table[Arel.star], occurrences_table[:created_at].maximum.as('recent_occurrence'))
                      .group(errors_table[:id])
                      .order(recent_occurrence: :desc)
     end
