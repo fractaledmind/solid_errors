@@ -7,6 +7,11 @@ module SolidErrors
       warning: "⚠️",
       info: "ℹ️"
     }
+    SEVERITY_TO_BADGE_CLASSES = {
+      error: "bg-red-100 text-red-800",
+      warning: "bg-yellow-100 text-yellow-800",
+      info: "bg-blue-100 text-blue-800"
+    }
 
     has_many :occurrences, class_name: "SolidErrors::Occurrence", dependent: :destroy
 
@@ -19,6 +24,10 @@ module SolidErrors
 
     def emoji
       SEVERITY_TO_EMOJI[severity.to_sym]
+    end
+
+    def badge_classes
+      "px-2 inline-flex text-[.75em] font-semibold rounded-md #{SEVERITY_TO_BADGE_CLASSES[severity.to_sym]}"
     end
   end
 end
