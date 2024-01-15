@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    solid_errors (0.2.8)
+    solid_errors (0.2.9)
       rails (~> 7.0)
 
 GEM
