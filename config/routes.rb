@@ -1,5 +1,5 @@
 SolidErrors::Engine.routes.draw do
-  root to: "errors#index"
+  get "/" => "errors#index", as: :root
 
-  resources :errors, only: [:index, :show, :update]
+  resources :errors, only: [:index, :show, :update], path: ""
 end
