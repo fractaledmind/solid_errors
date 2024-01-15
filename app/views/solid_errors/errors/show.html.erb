@@ -74,20 +74,24 @@
         <em><%= @error.source %></em>
       </dd>
     </div>
-    <div class="flex items-center justify-between flex-wrap gap-x-2">
+    <div class="flex items-start justify-between flex-wrap gap-x-2">
       <dt class="font-bold">
         <%= SolidErrors::Error.human_attribute_name(:project_root) %>
       </dt>
-      <dd class="inline-flex items-center gap-1">
+      <dd class="">
         <span><%= SolidErrors::BacktraceLine::RAILS_ROOT %></span>
       </dd>
     </div>
-    <div class="flex items-center justify-between flex-wrap gap-x-2">
+    <div class="flex items-start justify-between flex-wrap gap-x-2">
       <dt class="font-bold">
         <%= SolidErrors::Error.human_attribute_name(:gem_root) %>
       </dt>
-      <dd class="inline-flex items-center gap-1">
-        <span><%= Gem.path.join("\n") %></span>
+      <dd class="">
+        <ul>
+          <% Gem.path.each do |path| %>
+            <li><%= path %></li>
+          <% end %>
+        </ul>
       </dd>
     </div>
   </dl>

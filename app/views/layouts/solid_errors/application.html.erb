@@ -95,7 +95,8 @@
       */
 
       abbr:where([title]) {
-        text-decoration: underline dotted;
+        -webkit-text-decoration: underline dotted;
+        text-decoration:underline dotted
       }
 
       /*
@@ -575,6 +576,12 @@
         .container{
           max-width: 1536px
         }
+      }
+
+      .bi {
+        fill: currentColor;
+        stroke-width: 0.5;
+        stroke: currentColor;
       }
 
       .sr-only{
