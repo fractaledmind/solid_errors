@@ -31,7 +31,7 @@
                   <span class="text-gray-500">in</span>
                   <code class="text-green-500"><%= line.filtered_method %></code>
                 </summary>
-                <div><pre class="debug_dump"><code class="torchlight"><% line.source.each do |n, code| %>
+                <div><pre class="flex overflow-auto rounded-b-lg bg-slate-800 p-4 text-sm leading-normal text-white sm:rounded-t-lg"><code class="flex flex-col min-h-full min-w-content px-0"><% line.source.each do |n, code| %>
                   <div class="line"><span class="mr-2 text-right select-none text-gray-600"><%= n %></span><span><%= code %></span></div>
                   <% end %></code></pre></div>
               <% end %>
