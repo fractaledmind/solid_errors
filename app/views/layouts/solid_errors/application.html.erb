@@ -798,6 +798,11 @@
         border-color: rgb(209 213 219 / var(--tw-border-opacity))
       }
 
+      .border-blue-500{
+        --tw-border-opacity: 1;
+        border-color: rgb(59 130 246 / var(--tw-border-opacity))
+      }
+
       .bg-gray-100{
         --tw-bg-opacity: 1;
         background-color: rgb(243 244 246 / var(--tw-bg-opacity))
@@ -1058,7 +1063,7 @@
     </style>
   </head>
   <body class="pb-4">
-    <main class="container mt-2">
+    <main class="container mx-auto mt-2">
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
 

@@ -60,6 +60,7 @@
         <%= SolidErrors::Error.human_attribute_name(:severity) %>
       </dt>
       <dd class="inline-flex items-center gap-1">
+        <%= @error.emoji %>
         <span class="<%= @error.badge_classes %>">
           <%= @error.severity %>
         </span>
