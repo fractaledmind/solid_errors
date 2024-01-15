@@ -4,11 +4,17 @@ module SolidErrors
 
     # GET /errors
     def index
+      errors_table = Error.arel_table
+      occurrences_table = Occurrence.arel_table
+      recent_occurrence = occurrences_table
+        .project(occurrences_table[:created_at].maximum)
+        .as('recent_occurrence')
+
       @errors = Error.unresolved
                      .joins(:occurrences)
-                     .select('errors.*, MAX(occurrences.created_at) AS recent_occurrence')
-                     .group('errors.id')
-                     .order('recent_occurrence DESC')
+                     .select(errors_table[Arel.star], recent_occurrence)
+                     .group(errors_table[:id])
+                     .order(recent_occurrence: :desc)
     end
 
     # GET /errors/1
