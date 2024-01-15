@@ -17,7 +17,7 @@
     <%= time_ago_in_words error.occurrences.maximum(:created_at), scope: 'datetime.distance_in_words.short' %>
   </td>
   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-    <%= button_to error_path(error), method: :patch, class: button_classes(type: :primary_ghost), params: { error: { resolved_at: Time.now } } do %>
+    <%= button_to error_path(error), method: :patch, class: "inline-flex items-center justify-center gap-2 font-medium cursor-pointer border rounded-lg py-3 px-5 bg-transparent text-blue-500 border-blue-500 hover:ring-blue-200 hover:ring-8", params: { error: { resolved_at: Time.now } } do %>
       Resolve<span class="sr-only">, Error #<%= error.id %></span>
     <% end %>
   </td>

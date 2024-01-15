@@ -1,12 +1,12 @@
 <div class="inline-flex items-center justify-start flex-wrap gap-3 whitespace-nowrap">
   <% if current_controller.errors? && !current_action.errors_index? %>
-    <%= link_to errors_path, class: button_classes(icon: true) do %>
+    <%= link_to errors_path, class: "inline-flex items-center justify-center gap-2 font-medium cursor-pointer border rounded-lg py-3 px-5 bg-gray-100 text-initial border-gray-300 hover:ring-gray-200 hover:ring-8" do %>
       <%= bootstrap_svg "arrow-left" %>
       <span>Back to errors</span>
     <% end %>
   <% end %>
 
-  <%= button_to error_path(error), method: :patch, class: button_classes(type: :primary_ghost), params: { error: { resolved_at: Time.now } } do %>
+  <%= button_to error_path(error), method: :patch, class: "inline-flex items-center justify-center gap-2 font-medium cursor-pointer border rounded-lg py-3 px-5 bg-transparent text-blue-500 border-blue-500 hover:ring-blue-200 hover:ring-8", params: { error: { resolved_at: Time.now } } do %>
     Resolve Error<span class="sr-only"> #<%= error.id %></span>
   <% end %>
 </div>
