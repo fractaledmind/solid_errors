@@ -33,7 +33,15 @@ Please consult the [official guides](https://guides.rubyonrails.org/error_report
 
 ### Configuration
 
-Currently, the only configuration option is `config.solid_errors.connects_to`, which is a custom database configuration that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app. For example:
+You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, only 3 configuration options are available:
+
+* `connects_to` - The database configuration to use for the Solid Errors database. See [Database Configuration](#database-configuration) for more information.
+* `username` - The username to use for HTTP authentication. See [Authentication](#authentication) for more information.
+* `password` - The password to use for HTTP authentication. See [Authentication](#authentication) for more information.
+
+#### Database Configuration
+
+`config.solid_errors.connects_to` takes a custom database configuration hash that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app. For example:
 
 ```ruby
 # Use a single separate DB for Solid Errors
@@ -47,7 +55,7 @@ or
 config.solid_errors.connects_to = { database: { writing: :solid_errors_primary, reading: :solid_errors_replica } }
 ```
 
-### Authentication
+#### Authentication
 
 Solid Errors does not restrict access out of the box. You must secure the dashboard yourself. However, it does provide basic HTTP authentication that can be used with basic authentication or Devise. All you need to do is setup a username and password.
 
@@ -96,7 +104,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/solid_errors. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/solid_errors/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/fractaledmind/solid_errors. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/fractaledmind/solid_errors/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -104,4 +112,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the SolidErrors project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/solid_errors/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the SolidErrors project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fractaledmind/solid_errors/blob/main/CODE_OF_CONDUCT.md).
