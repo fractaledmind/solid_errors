@@ -4,7 +4,7 @@ module SolidErrors
   class Record < ActiveRecord::Base
     self.abstract_class = true
 
-    connects_to **SolidErrors.connects_to if SolidErrors.connects_to
+    connects_to(**SolidErrors.connects_to) if SolidErrors.connects_to
   end
 end
 

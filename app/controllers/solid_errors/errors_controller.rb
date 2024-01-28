@@ -1,6 +1,6 @@
 module SolidErrors
   class ErrorsController < ApplicationController
-    before_action :set_error, only: %i[ show update ]
+    before_action :set_error, only: %i[show update]
 
     # GET /errors
     def index
@@ -8,10 +8,10 @@ module SolidErrors
       occurrences_table = Occurrence.arel_table
 
       @errors = Error.unresolved
-                     .joins(:occurrences)
-                     .select(errors_table[Arel.star], occurrences_table[:created_at].maximum.as('recent_occurrence'))
-                     .group(errors_table[:id])
-                     .order(recent_occurrence: :desc)
+        .joins(:occurrences)
+        .select(errors_table[Arel.star], occurrences_table[:created_at].maximum.as("recent_occurrence"))
+        .group(errors_table[:id])
+        .order(recent_occurrence: :desc)
     end
 
     # GET /errors/1
@@ -25,13 +25,14 @@ module SolidErrors
     end
 
     private
-      # Only allow a list of trusted parameters through.
-      def error_params
-        params.require(:error).permit(:resolved_at)
-      end
 
-      def set_error
-        @error = Error.find(params[:id])
-      end
+    # Only allow a list of trusted parameters through.
+    def error_params
+      params.require(:error).permit(:resolved_at)
+    end
+
+    def set_error
+      @error = Error.find(params[:id])
+    end
   end
 end

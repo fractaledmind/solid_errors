@@ -1,26 +1,25 @@
 module SolidErrors
   class Subscriber
-    IGNORED_ERRORS = ['ActionController::RoutingError',
-                      'AbstractController::ActionNotFound',
-                      'ActionController::MethodNotAllowed',
-                      'ActionController::UnknownHttpMethod',
-                      'ActionController::NotImplemented',
-                      'ActionController::UnknownFormat',
-                      'ActionController::InvalidAuthenticityToken',
-                      'ActionController::InvalidCrossOriginRequest',
-                      'ActionDispatch::Http::Parameters::ParseError',
-                      'ActionController::BadRequest',
-                      'ActionController::ParameterMissing',
-                      'ActiveRecord::RecordNotFound',
-                      'ActionController::UnknownAction',
-                      'ActionDispatch::Http::MimeNegotiation::InvalidType',
-                      'Rack::QueryParser::ParameterTypeError',
-                      'Rack::QueryParser::InvalidParameterError',
-                      'CGI::Session::CookieStore::TamperedWithCookie',
-                      'Mongoid::Errors::DocumentNotFound',
-                      'Sinatra::NotFound',
-                      'Sidekiq::JobRetry::Skip'].map(&:freeze).freeze
-
+    IGNORED_ERRORS = ["ActionController::RoutingError",
+      "AbstractController::ActionNotFound",
+      "ActionController::MethodNotAllowed",
+      "ActionController::UnknownHttpMethod",
+      "ActionController::NotImplemented",
+      "ActionController::UnknownFormat",
+      "ActionController::InvalidAuthenticityToken",
+      "ActionController::InvalidCrossOriginRequest",
+      "ActionDispatch::Http::Parameters::ParseError",
+      "ActionController::BadRequest",
+      "ActionController::ParameterMissing",
+      "ActiveRecord::RecordNotFound",
+      "ActionController::UnknownAction",
+      "ActionDispatch::Http::MimeNegotiation::InvalidType",
+      "Rack::QueryParser::ParameterTypeError",
+      "Rack::QueryParser::InvalidParameterError",
+      "CGI::Session::CookieStore::TamperedWithCookie",
+      "Mongoid::Errors::DocumentNotFound",
+      "Sinatra::NotFound",
+      "Sidekiq::JobRetry::Skip"].map(&:freeze).freeze
 
     def report(error, handled:, severity:, context:, source: nil)
       return if ignore_by_class?(error.class.name)

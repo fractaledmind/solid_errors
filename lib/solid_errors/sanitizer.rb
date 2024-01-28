@@ -1,11 +1,11 @@
 module SolidErrors
   # adapted from: https://github.com/honeybadger-io/honeybadger-ruby/blob/master/lib/honeybadger/util/sanitizer.rb
   class Sanitizer
-    BASIC_OBJECT = '#<BasicObject>'.freeze
-    DEPTH = '[DEPTH]'.freeze
-    RAISED = '[RAISED]'.freeze
-    RECURSION = '[RECURSION]'.freeze
-    TRUNCATED = '[TRUNCATED]'.freeze
+    BASIC_OBJECT = "#<BasicObject>".freeze
+    DEPTH = "[DEPTH]".freeze
+    RAISED = "[RAISED]".freeze
+    RECURSION = "[RECURSION]".freeze
+    TRUNCATED = "[TRUNCATED]".freeze
     MAX_STRING_SIZE = 65536
 
     def self.sanitize(data)
@@ -21,7 +21,7 @@ module SolidErrors
       return BASIC_OBJECT if basic_object?(data)
 
       if recursive?(data)
-        return RECURSION if stack && stack.include?(data.object_id)
+        return RECURSION if stack&.include?(data.object_id)
 
         stack = stack ? stack.dup : Set.new
         stack << data.object_id
@@ -33,8 +33,8 @@ module SolidErrors
 
         new_hash = {}
         data.each do |key, value|
-          key = key.kind_of?(Symbol) ? key : sanitize(key, depth+1, stack)
-          value = sanitize(value, depth+1, stack)
+          key = key.is_a?(Symbol) ? key : sanitize(key, depth + 1, stack)
+          value = sanitize(value, depth + 1, stack)
           new_hash[key] = value
         end
         new_hash
@@ -42,7 +42,7 @@ module SolidErrors
         return DEPTH if depth >= max_depth
 
         data.to_a.map do |value|
-          sanitize(value, depth+1, stack)
+          sanitize(value, depth + 1, stack)
         end
       when Numeric, TrueClass, FalseClass, NilClass
         data
@@ -64,28 +64,29 @@ module SolidErrors
     end
 
     private
-      attr_reader :max_depth
 
-      def basic_object?(object)
-        object.respond_to?(:to_s)
-        false
-      rescue
-        # BasicObject doesn't respond to `#respond_to?`.
-        true
-      end
+    attr_reader :max_depth
 
-      def recursive?(data)
-        data.is_a?(Hash) || data.is_a?(Array) || data.is_a?(Set)
-      end
+    def basic_object?(object)
+      object.respond_to?(:to_s)
+      false
+    rescue
+      # BasicObject doesn't respond to `#respond_to?`.
+      true
+    end
 
-      def sanitize_string(string)
-        string.gsub!(/#<(.*?):0x.*?>/, '#<\1>') # remove object_id
-        return string unless string.respond_to?(:size) && string.size > MAX_STRING_SIZE
-        string[0...MAX_STRING_SIZE] + TRUNCATED
-      end
+    def recursive?(data)
+      data.is_a?(Hash) || data.is_a?(Array) || data.is_a?(Set)
+    end
 
-      def inspected?(string)
-        String(string) =~ /#<.*>/
-      end
+    def sanitize_string(string)
+      string.gsub!(/#<(.*?):0x.*?>/, '#<\1>') # remove object_id
+      return string unless string.respond_to?(:size) && string.size > MAX_STRING_SIZE
+      string[0...MAX_STRING_SIZE] + TRUNCATED
+    end
+
+    def inspected?(string)
+      String(string) =~ /#<.*>/
+    end
   end
 end

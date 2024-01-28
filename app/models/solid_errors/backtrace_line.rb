@@ -2,14 +2,14 @@ module SolidErrors
   class BacktraceLine
     # Backtrace line regexp (optionally allowing leading X: for windows support).
     INPUT_FORMAT = %r{^((?:[a-zA-Z]:)?[^:]+):(\d+)(?::in `([^']+)')?$}.freeze
-    STRING_EMPTY = ''.freeze
-    GEM_ROOT = '[GEM_ROOT]'.freeze
-    PROJECT_ROOT = '[PROJECT_ROOT]'.freeze
+    STRING_EMPTY = "".freeze
+    GEM_ROOT = "[GEM_ROOT]".freeze
+    PROJECT_ROOT = "[PROJECT_ROOT]".freeze
     PROJECT_ROOT_CACHE = {}
     GEM_ROOT_CACHE = {}
     RELATIVE_ROOT = Regexp.new('^\.\/').freeze
     RAILS_ROOT = ::Rails.root.to_s.dup.freeze
-    ROOT_REGEXP = Regexp.new("^#{ Regexp.escape(RAILS_ROOT) }").freeze
+    ROOT_REGEXP = Regexp.new("^#{Regexp.escape(RAILS_ROOT)}").freeze
     BACKTRACE_FILTERS = [
       lambda { |line|
         return line unless defined?(Gem)
@@ -47,21 +47,19 @@ module SolidErrors
         file, number, method = match[1], match[2], match[3]
         filtered_args = [fmatch[1], fmatch[2], fmatch[3]]
         new(file, number, method, *filtered_args, opts.fetch(:source_radius, 2))
-      else
-        nil
       end
     end
 
     def initialize(file, number, method, filtered_file = file,
-                    filtered_number = number, filtered_method = method,
-                    source_radius = 2)
-      self.filtered_file   = filtered_file
+      filtered_number = number, filtered_method = method,
+      source_radius = 2)
+      self.filtered_file = filtered_file
       self.filtered_number = filtered_number
       self.filtered_method = filtered_method
-      self.file            = file
-      self.number          = number
-      self.method          = method
-      self.source_radius   = source_radius
+      self.file = file
+      self.number = number
+      self.method = method
+      self.source_radius = source_radius
     end
 
     # Reconstructs the line in a readable fashion.
@@ -74,7 +72,7 @@ module SolidErrors
     end
 
     def inspect
-      "<Line:#{to_s}>"
+      "<Line:#{self}>"
     end
 
     # Determines if this line is part of the application trace or not.
@@ -105,8 +103,11 @@ module SolidErrors
 
       l = 0
       File.open(file) do |f|
-        start.times { f.gets ; l += 1 }
-        return Hash[duration.times.map { (line = f.gets) ? [(l += 1), line] : nil }.compact]
+        start.times {
+          f.gets
+          l += 1
+        }
+        return duration.times.map { (line = f.gets) ? [(l += 1), line] : nil }.compact.to_h
       end
     end
   end

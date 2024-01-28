@@ -14,8 +14,8 @@ module SolidErrors
 
     private
 
-      def parse_backtrace(backtrace)
-        Backtrace.parse(backtrace)
-      end
+    def parse_backtrace(backtrace)
+      Backtrace.parse(backtrace)
+    end
   end
 end
