@@ -27,7 +27,7 @@ module SolidErrors
     end
 
     def badge_classes
-      "px-2 inline-flex text-[.75em] font-semibold rounded-md #{SEVERITY_TO_BADGE_CLASSES[severity.to_sym]}"
+      "px-2 inline-flex text-sm font-semibold rounded-md #{SEVERITY_TO_BADGE_CLASSES[severity.to_sym]}"
     end
   end
 end

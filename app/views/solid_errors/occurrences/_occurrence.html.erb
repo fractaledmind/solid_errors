@@ -10,12 +10,12 @@
     <div class="">
       <dl class="ml-6">
         <% occurrence.context&.each do |key, value| %>
-          <div class="flex items-center justify-between flex-wrap gap-x-2">
+          <div class="flex items-center justify-start flex-wrap gap-x-2">
             <dt class="font-bold">
               <%= SolidErrors::Occurrence.human_attribute_name(key) %>
             </dt>
             <dd class="">
-              <%= value %>
+              <code><%= value %></code>
             </dd>
           </div>
         <% end %>
