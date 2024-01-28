@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.3.3] - 2024-01-28
+
+- Properly fix the setup issues
+- Add the needed locale file
+
 ## [0.3.2] - 2024-01-28
 
 - Fix belongs_to reference in Occurrence model
