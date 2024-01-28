@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.1] - 2024-01-28
+
+- Fix incorrect table reference name and long index name in the migration template
+
 ## [0.3.0] - 2024-01-28
 
 - Proper release with full coherent functionality and documentation
