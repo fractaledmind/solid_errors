@@ -1,6 +1,6 @@
 module SolidErrors
   class Occurrence < Record
-    belongs_to :solid_error, class_name: "SolidErrors::Error"
+    belongs_to :error, class_name: "SolidErrors::Error"
 
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
     # have the base path for gem installs replaced by "[GEM_ROOT]", while those in the project
