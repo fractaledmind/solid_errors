@@ -22,7 +22,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+![image description](images/index-screenshot.png)
+
+![image description](images/show-screenshot.png)
 
 ## Development
 
