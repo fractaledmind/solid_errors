@@ -1,5 +1,30 @@
 # Solid Errors
 
+<p>
+  <a href="https://rubygems.org/gems/solid_errors">
+    <img alt="GEM Version" src="https://img.shields.io/gem/v/solid_errors?color=168AFE&include_prereleases&logo=ruby&logoColor=FE1616">
+  </a>
+  <a href="https://rubygems.org/gems/solid_errors">
+    <img alt="GEM Downloads" src="https://img.shields.io/gem/dt/solid_errors?color=168AFE&logo=ruby&logoColor=FE1616">
+  </a>
+  <a href="https://github.com/testdouble/standard">
+    <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
+  </a>
+  <a href="https://github.com/fractaledmind/solid_errors/actions/workflows/main.yml">
+    <img alt="Tests" src="https://github.com/fractaledmind/solid_errors/actions/workflows/main.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/sponsors/fractaledmind">
+    <img alt="Sponsors" src="https://img.shields.io/github/sponsors/fractaledmind?color=eb4aaa&logo=GitHub%20Sponsors" />
+  </a>
+  <a href="https://ruby.social/@fractaledmind">
+    <img alt="Ruby.Social Follow" src="https://img.shields.io/mastodon/follow/000008274?domain=https%3A%2F%2Fruby.social&label=%40fractaledmind&style=social">
+  </a>
+  <a href="https://twitter.com/fractaledmind">
+    <img alt="Twitter Follow" src="https://img.shields.io/twitter/url?label=%40fractaledmind&style=social&url=https%3A%2F%2Ftwitter.com%2Ffractaledmind">
+  </a>
+</p>
+
+
 Solid Errors is a DB-based, app-internal exception tracker for Rails applications, designed with simplicity and performance in mind. It uses the new [Rails error reporting API](https://guides.rubyonrails.org/error_reporting.html) to store uncaught exceptions in the database, and provides a simple UI for viewing and managing exceptions.
 
 ## Installation
