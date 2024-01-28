@@ -11,11 +11,11 @@ class CreateSolidErrorsTables < ActiveRecord::Migration<%= migration_version %>
 
       t.timestamps
 
-      t.index [:exception_class, :message, :severity, :source], unique: true
+      t.index [:exception_class, :message, :severity, :source], unique: true, name: "solid_error_uniqueness_index"
     end
 
     create_table :solid_errors_occurrences do |t|
-      t.belongs_to :error, null: false, foreign_key: true
+      t.belongs_to :solid_error, null: false, foreign_key: true
       t.text :backtrace
       t.json :context
 
