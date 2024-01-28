@@ -1,28 +1,90 @@
-# SolidErrors
+# Solid Errors
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/solid_errors`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Solid Errors is a DB-based, app-internal exception tracker for Rails applications, designed with simplicity and performance in mind. It uses the new [Rails error reporting API](https://guides.rubyonrails.org/error_reporting.html) to store uncaught exceptions in the database, and provides a simple UI for viewing and managing exceptions.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install the gem and add to the application's Gemfile by executing:
 
-```ruby
-gem 'solid_errors'
-```
+    $ bundle add solid_errors
 
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
+If bundler is not being used to manage dependencies, install the gem by executing:
 
     $ gem install solid_errors
 
+After installing the gem, run the installer:
+
+    $ rails generate solid_errors:install
+
+This will copy the required migration over to your app.
+
+Then mount the engine in your config/routes.rb file
+
+    mount SolidErrors::Engine, at: "/solid_errors"
+
+> [!NOTE]
+> Be sure to [secure the dashboard](#authentication) in production.
+
 ## Usage
 
+All exceptions are recorded automatically. No additional code required.
+
+Please consult the [official guides](https://guides.rubyonrails.org/error_reporting.html) for an introduction to the error reporting API.
+
+### Configuration
+
+Currently, the only configuration option is `config.solid_errors.connects_to`, which is a custom database configuration that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app. For example:
+
+```ruby
+# Use a single separate DB for Solid Errors
+config.solid_errors.connects_to = { database: { writing: :solid_errors, reading: :solid_errors } }
+```
+
+or
+
+```ruby
+# Use a separate primary/replica pair for Solid Errors
+config.solid_errors.connects_to = { database: { writing: :solid_errors_primary, reading: :solid_errors_replica } }
+```
+
+### Authentication
+
+Solid Errors does not restrict access out of the box. You must secure the dashboard yourself. However, it does provide basic HTTP authentication that can be used with basic authentication or Devise. All you need to do is setup a username and password.
+
+There are two ways to setup a username and password. First, you can use the `SOLIDERRORS_USERNAME` and `SOLIDERRORS_PASSWORD` environment variables:
+
+```ruby
+ENV["SOLIDERRORS_USERNAME"] = "frodo"
+ENV["SOLIDERRORS_PASSWORD"] = "ikeptmysecrets"
+```
+
+Second, you can set the `SolidErrors.username` and `SolidErrors.password` variables in an initializer:
+
+```ruby
+# Set authentication credentials for Solid Errors
+config.solid_errors.username = Rails.application.credentials.solid_errors.username
+config.solid_errors.password = Rails.application.credentials.solid_errors.password
+```
+
+Either way, if you have set a username and password, Solid Errors will use basic HTTP authentication. If you have not set a username and password, Solid Errors will not require any authentication to view the dashboard.
+
+If you use Devise for authenctication in your app, you can also restrict access to the dashboard by using their `authenticate` contraint in your routes file:
+
+```ruby
+authenticate :user, -> (user) { user.admin? } do
+  mount SolidErrors::Engine, at: "/solid_errors"
+end
+```
+
+### Examples
+
+There are only two screens in the dashboard.
+
+* the index view of all unresolved errors:
+
 ![image description](images/index-screenshot.png)
+
+* and the show view of a particular error:
 
 ![image description](images/show-screenshot.png)
 
