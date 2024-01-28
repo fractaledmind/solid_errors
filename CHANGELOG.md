@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.2] - 2024-01-28
+
+- Fix belongs_to reference in Occurrence model
+
 ## [0.3.1] - 2024-01-28
 
 - Fix incorrect table reference name and long index name in the migration template
