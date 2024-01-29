@@ -1,4 +1,5 @@
 module SolidErrors
+  # adapted from: https://github.com/honeybadger-io/honeybadger-ruby/blob/master/lib/honeybadger/backtrace.rb
   class Backtrace
     # Holder for an Array of Backtrace::Line instances.
     attr_reader :lines, :application_lines
