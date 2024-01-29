@@ -22,5 +22,12 @@ module SolidErrors
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
     end
+
+    def send_emails?
+      true
+    end
+
+    def from = "solid_errors@noreply.com"
+    def to = "stephen.margheim@gmail.com"
   end
 end
