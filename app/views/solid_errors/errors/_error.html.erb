@@ -1,31 +1,102 @@
-<tr class="even:bg-gray-50 align-top">
-  <td scope="col" class="whitespace-wrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-3">
-    <div>
+<%# locals: (error:, show_actions: true) -%>
+
+<%= tag.section id: dom_id(error), class: "space-y-6" do %>
+  <div class="flex justify-between items-center">
+    <%= tag.h1 class: "font-bold flex items-center text-2xl gap-2" do %>
       <%= error.emoji %>
-      <%= link_to error_path(error), class: "text-blue-400 underline inline-flex items-baseline gap-1" do %>
-        <strong><code><%= error.exception_class %></code></strong>
-      <% end %>
+      <code><%= error.exception_class %></code>
       from
       <em><code><%= error.source %></code></em>
-    </div>
-    <pre class="whitespace-pre-wrap ml-6 mt-4"><%= error.message %></pre>
-  </td>
-  <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
-    <%= error.occurrences.size %>
-  </td>
-  <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
-    <% last_seen_at = error.occurrences.maximum(:created_at) %>
-    <abbr title="<%= last_seen_at.iso8601 %>" class="cursor-help">
-      <%= time_tag last_seen_at, time_ago_in_words(last_seen_at, scope: 'datetime.distance_in_words.short') %>
-    </abbr>
-  </td>
-  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-    <%= button_to error_path(error), method: :patch, class: "inline-flex items-center justify-center gap-2 font-medium cursor-pointer border rounded-lg py-3 px-5 bg-transparent text-blue-500 border-blue-500 hover:ring-blue-200 hover:ring-8", params: { error: { resolved_at: Time.now } } do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
-        <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
-        <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
-      </svg>
-      <span>Resolve<span class="sr-only">, Error #<%= error.id %></span></span>
     <% end %>
-  </td>
-</tr>
+
+    <small class="text-base">
+      #<code><%= error.id %></code>
+    </small>
+  </div>
+
+  <pre class=""><%= error.message %></pre>
+
+  <dl class="flex-1 grid grid-cols-2 gap-x-4">
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:first_seen) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <% first_seen_at = error.occurrences.minimum(:created_at) %>
+
+        <abbr title="<%= first_seen_at.iso8601 %>" class="cursor-help">
+          <%= time_tag first_seen_at, "#{time_ago_in_words(first_seen_at)} ago" %>
+        </abbr>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:last_seen) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <% last_seen_at = error.occurrences.maximum(:created_at) %>
+
+        <abbr title="<%= last_seen_at.iso8601 %>" class="cursor-help">
+          <%= time_tag last_seen_at, "#{time_ago_in_words(last_seen_at)} ago" %>
+        </abbr>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:occurrences) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <%= error.occurrences.size %>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:exception_class) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <code><%= error.exception_class %></code>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:severity) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <%= error.emoji %>
+        <span class="<%= error.badge_classes %>">
+          <%= error.severity %>
+        </span>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:source) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <em><%= error.source %></em>
+      </dd>
+    </div>
+    <div class="flex items-start justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:project_root) %>
+      </dt>
+      <dd class="">
+        <span><%= SolidErrors::BacktraceLine::RAILS_ROOT %></span>
+      </dd>
+    </div>
+    <div class="flex items-start justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:gem_root) %>
+      </dt>
+      <dd class="">
+        <ul>
+          <% Gem.path.each do |path| %>
+            <li><%= path %></li>
+          <% end %>
+        </ul>
+      </dd>
+    </div>
+  </dl>
+
+  <%= render "solid_errors/errors/actions", error: error if show_actions %>
+<% end %>
