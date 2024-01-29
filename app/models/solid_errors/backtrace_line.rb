@@ -29,7 +29,7 @@ module SolidErrors
     attr_reader :file
     attr_reader :number
     attr_reader :method
-    attr_reader :filtered_file, :filtered_number, :filtered_method
+    attr_reader :filtered_file, :filtered_number, :filtered_method, :unparsed_line
 
     # Parses a single line of a given backtrace
     #
@@ -47,13 +47,14 @@ module SolidErrors
 
         file, number, method = match[1], match[2], match[3]
         filtered_args = [fmatch[1], fmatch[2], fmatch[3]]
-        new(file, number, method, *filtered_args, opts.fetch(:source_radius, 2))
+        new(unparsed_line, file, number, method, *filtered_args, opts.fetch(:source_radius, 2))
       end
     end
 
-    def initialize(file, number, method, filtered_file = file,
+    def initialize(unparsed_line, file, number, method, filtered_file = file,
       filtered_number = number, filtered_method = method,
       source_radius = 2)
+      self.unparsed_line = unparsed_line
       self.filtered_file = filtered_file
       self.filtered_number = filtered_number
       self.filtered_method = filtered_method
@@ -87,7 +88,7 @@ module SolidErrors
 
     private
 
-    attr_writer :file, :number, :method, :filtered_file, :filtered_number, :filtered_method
+    attr_writer :file, :number, :method, :filtered_file, :filtered_number, :filtered_method, :unparsed_line
 
     attr_accessor :source_radius
 
