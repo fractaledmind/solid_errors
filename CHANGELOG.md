@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.4] - 2024-01-29
+
+- Ensure that setting username/password with Ruby triggers the basic authenctication
+
 ## [0.3.3] - 2024-01-28
 
 - Properly fix the setup issues
