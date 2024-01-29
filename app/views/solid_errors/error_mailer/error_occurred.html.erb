@@ -1,0 +1,18 @@
+<html>
+<head>
+  <title>Solid Errors | <%= @error.emoji %> <%= @error.exception_class %></title>
+  <%= render "layouts/solid_errors/style" %>
+</head>
+<body>
+  <%= render "solid_errors/errors/error",
+        error: @error,
+        show_actions: false %>
+
+  <br>
+  <br>
+
+  <%= render "solid_errors/occurrences/collection",
+        occurrences: [@occurrence],
+        titled: true %>
+</body>
+</html>
