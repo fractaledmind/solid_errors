@@ -56,6 +56,8 @@ All exceptions are recorded automatically. No additional code required.
 
 Please consult the [official guides](https://guides.rubyonrails.org/error_reporting.html) for an introduction to the error reporting API.
 
+There are intentionally few features; you can view and resolve errors. That’s it. The goal is to provide a simple, lightweight, and performant solution for tracking exceptions in your Rails application. If you need more features, you should probably use a 3rd party service like [Honeybadger](https://www.honeybadger.io/), whose MIT-licensed [Ruby agent gem](https://github.com/honeybadger-io/honeybadger-ruby) provided a couple of critical pieces of code for this project.
+
 ### Configuration
 
 You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, only 3 configuration options are available:
