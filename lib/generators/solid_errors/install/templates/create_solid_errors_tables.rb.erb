@@ -3,9 +3,9 @@
 class CreateSolidErrorsTables < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :solid_errors do |t|
-      t.string :exception_class, null: false
+      t.string :exception_class, null: false, limit: 200
       t.string :message, null: false
-      t.string :severity, null: false
+      t.string :severity, null: false, limit: 25
       t.string :source
       t.datetime :resolved_at, index: true
 
