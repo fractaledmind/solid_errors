@@ -7,8 +7,8 @@ require_relative "solid_errors/engine"
 
 module SolidErrors
   mattr_accessor :connects_to
-  mattr_accessor :username
-  mattr_accessor :password
+  mattr_writer :username
+  mattr_writer :password
 
   class << self
     # use method instead of attr_accessor to ensure
