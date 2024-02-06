@@ -30,22 +30,28 @@ Solid Errors is a DB-based, app-internal exception tracker for Rails application
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
-
-    $ bundle add solid_errors
+```bash
+$ bundle add solid_errors
+```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install solid_errors
+```bash
+$ gem install solid_errors
+```
 
 After installing the gem, run the installer:
-
-    $ rails generate solid_errors:install
+```bash
+$ rails generate solid_errors:install
+```
 
 This will copy the required migration over to your app.
 
-Then mount the engine in your config/routes.rb file
-
-    mount SolidErrors::Engine, at: "/solid_errors"
+Then mount the engine in your `config/routes.rb` file:
+```ruby
+authenticate :user, -> (user) { user.admin? } do
+  mount SolidErrors::Engine, at: "/solid_errors"
+end
+```
 
 > [!NOTE]
 > Be sure to [secure the dashboard](#authentication) in production.
@@ -122,6 +128,17 @@ There are only two screens in the dashboard.
 * and the show view of a particular error:
 
 ![image description](images/show-screenshot.png)
+
+### Usage with API-only Applications
+
+If your Rails application is an API-only application (generated with the `rails new --api` command), you will need to add the following middleware to your `config/application.rb` file in order to use the dashboard UI provided by Solid Errors:
+
+```ruby
+# /config/application.rb
+config.middleware.use ActionDispatch::Cookies
+config.middleware.use ActionDispatch::Session::CookieStore
+config.middleware.use ActionDispatch::Flash
+```
 
 ## Development
 
