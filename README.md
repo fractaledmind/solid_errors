@@ -129,6 +129,17 @@ There are only two screens in the dashboard.
 
 ![image description](images/show-screenshot.png)
 
+### Usage with API-only Applications
+
+If your Rails application is an API-only application (generated with the `rails new --api` command), you will need to add the following middleware to your `config/application.rb` file in order to use the dashboard UI provided by Solid Errors:
+
+```ruby
+# /config/application.rb
+config.middleware.use ActionDispatch::Cookies
+config.middleware.use ActionDispatch::Session::CookieStore
+config.middleware.use ActionDispatch::Flash
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
