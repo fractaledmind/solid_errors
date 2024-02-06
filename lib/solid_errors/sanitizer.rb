@@ -80,7 +80,7 @@ module SolidErrors
     end
 
     def sanitize_string(string)
-      string.gsub!(/#<(.*?):0x.*?>/, '#<\1>') # remove object_id
+      string = string.gsub(/#<(.*?):0x.*?>/, '#<\1>') # remove object_id
       return string unless string.respond_to?(:size) && string.size > MAX_STRING_SIZE
       string[0...MAX_STRING_SIZE] + TRUNCATED
     end
