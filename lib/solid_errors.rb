@@ -28,6 +28,7 @@ module SolidErrors
     end
 
     def from = "solid_errors@noreply.com"
+
     def to = "stephen.margheim@gmail.com"
   end
 end
