@@ -11,9 +11,5 @@ module SolidErrors
         SolidErrors.public_send("#{name}=", value)
       end
     end
-
-    initializer "solid_errors.active_record.error_subscriber" do
-      Rails.error.subscribe(SolidErrors::Subscriber.new)
-    end
   end
 end
