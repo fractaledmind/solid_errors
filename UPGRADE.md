@@ -41,4 +41,29 @@ Then, run this migration:
 rails db:migrate:{name_of_errors_database}
 ```
 
-Be sure to include this migration and schema change in the same release as the Solid Errors gem upgrade.
+Once the migration is complete, you will next need to fingerprint any existing errors in your database. This can be done using the following Ruby script, which can be put in a Rake task, a data migration, or simply done in the console:
+```ruby
+SolidErrors::Error.where(fingerprint: nil).find_each do |error|
+  error_attributes = error.attributes.slice('exception_class', 'message', 'severity', 'source')
+  fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
+  error.update_attribute(:fingerprint, fingerprint)
+end
+```
+
+You will need to run this script _as soon as the schema migration_ is complete so that you can fingerprint all existing errors before new errors with pre-generated fingerprints are recorded.
+
+Once you have migrated all existing errors to include a fingerprint, the final step is to run one more schema migration to mark the `fingerprint` column as non-nullable. You can generate a migration for this with the following command:
+```bash
+rails generate migration SolidErrorFingerprintNonNullable --database {name_of_errors_database}
+```
+
+Then, update the migration file with the following code:
+```ruby
+class SolidErrorFingerprintNonNullable < ActiveRecord::Migration[7.1]
+  def change
+    change_column_null :solid_errors, :fingerprint, false
+  end
+end
+```
+
+Once this migration has been successfully run in production, your upgrade to Solid Errors 0.4.0 is complete!
