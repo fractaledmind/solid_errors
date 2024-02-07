@@ -66,11 +66,14 @@ There are intentionally few features; you can view and resolve errors. That’s 
 
 ### Configuration
 
-You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, only 3 configuration options are available:
+You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, 6 configuration options are available:
 
 * `connects_to` - The database configuration to use for the Solid Errors database. See [Database Configuration](#database-configuration) for more information.
 * `username` - The username to use for HTTP authentication. See [Authentication](#authentication) for more information.
 * `password` - The password to use for HTTP authentication. See [Authentication](#authentication) for more information.
+* `sends_email` - Whether or not to send emails when an error occurs. See [Email notifications](#email-notifications) for more information.
+* `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
+* `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 
 #### Database Configuration
 
@@ -116,6 +119,29 @@ authenticate :user, -> (user) { user.admin? } do
   mount SolidErrors::Engine, at: "/solid_errors"
 end
 ```
+
+#### Email notifications
+
+Solid Errors _can_ send email notifications whenever an error occurs, if your application has ActionMailer already properly setup to send emails. However, in order to activate this feature you must define the email address(es) to send the notifications to. Optionally, you can also define the email address to send the notifications from (useful if your email provider only allows emails to be sent from a predefined list of addresses) or simply turn off this feature altogether.
+
+There are two ways to configure email notifications. First, you can use environment variables:
+
+```ruby
+ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to true
+ENV["SOLIDERRORS_EMAIL_FROM"] = "errors@myapp.com" # defaults to "solid_errors@noreply.com"
+ENV["SOLIDERRORS_EMAIL_TO"] = "devs@myapp.com" # no default, must be set
+```
+
+Second, you can set the values via the configuration object:
+
+```ruby
+# Set authentication credentials for Solid Errors
+config.solid_errors.send_emails = true
+config.solid_errors.email_from = "errors@myapp.com"
+config.solid_errors.email_to = "devs@myapp.com"
+```
+
+If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
 
 ### Examples
 
