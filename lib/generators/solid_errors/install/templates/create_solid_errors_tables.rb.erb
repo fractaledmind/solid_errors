@@ -8,7 +8,7 @@ class CreateSolidErrorsTables < ActiveRecord::Migration<%= migration_version %>
       t.text :severity, null: false
       t.text :source
       t.datetime :resolved_at, index: true
-      t.string :fingerprint, null: false, limit: 255, index: { unique: true }
+      t.string :fingerprint, null: false, limit: 64, index: { unique: true }
 
       t.timestamps
     end
