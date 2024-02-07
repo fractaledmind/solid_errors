@@ -16,6 +16,10 @@ module SolidErrors
       Rails.error.subscribe(SolidErrors::Subscriber.new)
     end
 
+    # This is a hack that I hate, but it's the only way to get the error reporter
+    # to report exceptions in production. Currently, Rails _renders_ production errors,
+    # but doesn't _raise_ them, and the `Executor` only reports raised exceptions.
+    # So, this monkey-patch ensures to report any logged exceptions.
     initializer "solid_errors.active_support.notification_subscriber" do
       ActiveSupport.on_load(:action_dispatch) do
         class ActionDispatch::Executor
