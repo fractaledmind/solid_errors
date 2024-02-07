@@ -7,8 +7,8 @@ module SolidErrors
 
       mail(
         subject: "#{@error.emoji} #{@error.exception_class}",
-        from: SolidErrors.from,
-        to: SolidErrors.to
+        from: SolidErrors.email_from,
+        to: SolidErrors.email_to
       )
     end
   end
