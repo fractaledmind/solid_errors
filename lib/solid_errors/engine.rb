@@ -21,7 +21,7 @@ module SolidErrors
     # but doesn't _raise_ them, and the `Executor` only reports raised exceptions.
     # So, this monkey-patch ensures to report any logged exceptions.
     initializer "solid_errors.active_support.notification_subscriber" do
-      ActiveSupport.on_load(:action_dispatch) do
+      ActiveSupport.on_load(:action_dispatch_request) do
         class ActionDispatch::Executor
           def call(env)
             returned = super
