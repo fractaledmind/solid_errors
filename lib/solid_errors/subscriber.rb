@@ -30,10 +30,11 @@ module SolidErrors
         severity: severity,
         source: source
       }
-      if (record = SolidErrors::Error.find_by(error_attributes))
+      fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
+      if (record = SolidErrors::Error.find_by(fingerprint: fingerprint))
         record.update!(resolved_at: nil, updated_at: Time.now)
       else
-        record = SolidErrors::Error.create!(error_attributes)
+        record = SolidErrors::Error.create!(error_attributes.merge(fingerprint: fingerprint))
       end
 
       SolidErrors::Occurrence.create(
