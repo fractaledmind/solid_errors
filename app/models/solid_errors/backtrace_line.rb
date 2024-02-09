@@ -2,7 +2,7 @@ module SolidErrors
   # adapted from: https://github.com/honeybadger-io/honeybadger-ruby/blob/master/lib/honeybadger/backtrace.rb
   class BacktraceLine
     # Backtrace line regexp (optionally allowing leading X: for windows support).
-    INPUT_FORMAT = %r{^((?:[a-zA-Z]:)?[^:]+):(\d+)(?::in `([^']+)')?$}.freeze
+    INPUT_FORMAT = %r{^((?:[a-zA-Z]:)?[^:]+):(\d+)(?::in `([^']+)')?$}
     STRING_EMPTY = "".freeze
     GEM_ROOT = "[GEM_ROOT]".freeze
     PROJECT_ROOT = "[PROJECT_ROOT]".freeze
