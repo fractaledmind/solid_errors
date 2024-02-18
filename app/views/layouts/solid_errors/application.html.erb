@@ -12,13 +12,6 @@
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
 
-    <footer class="container mx-auto py-4 mt-24 text-base flex justify-between items-center border-t">
-      <p>
-        <code><strong>Solid</strong> <em>Errors</em></code>&nbsp;&nbsp;|&nbsp;
-        Made by <a href="https://twitter.com/fractaledmind" class="text-blue-500 hover:underline decoration-blue-500">@fractaledmind</a> and <a href="https://github.com/fractaledmind/solid_errors/graphs/contributors" class="text-blue-500 hover:underline decoration-blue-500">friends</a>! Want to help? It's <a href="https://github.com/fractaledmind/solid_errors" class="text-blue-500 hover:underline decoration-blue-500">open source</a>!
-      </p>
-    </footer>
-
     <div class="fixed top-0 left-0 right-0 text-center py-2">
       <% if notice.present? %>
         <p id="notice"
