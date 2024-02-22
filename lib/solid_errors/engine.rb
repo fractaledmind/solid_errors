@@ -8,7 +8,7 @@ module SolidErrors
 
     initializer "solid_errors.config" do
       config.solid_errors.each do |name, value|
-        SolidErrors.public_send("#{name}=", value)
+        SolidErrors.public_send(:"#{name}=", value)
       end
     end
 
