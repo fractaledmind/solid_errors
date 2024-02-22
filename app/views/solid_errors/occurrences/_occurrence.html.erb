@@ -1,8 +1,9 @@
 <% seen_at = occurrence.created_at %>
 <% backtrace = occurrence.parsed_backtrace %>
+<% open ||= (defined?(occurrence_counter) && occurrence_counter.zero?) || true %>
 
 <%= tag.section id: dom_id(occurrence), class: "" do %>
-  <%= tag.details open: occurrence_counter.zero? do %>
+  <%= tag.details open: open do %>
     <summary class="hover:bg-gray-50 p-2 rounded cursor-pointer">
       <%= time_tag seen_at, seen_at %>
       (<em><%= time_ago_in_words(seen_at) %> ago</em>)
