@@ -4,14 +4,9 @@
   <%= render "layouts/solid_errors/style" %>
 </head>
 <body>
-  <%= render "solid_errors/errors/error",
-        error: @error,
-        show_actions: false %>
-
+  <%= render "solid_errors/errors/error", error: @error, show_actions: false %>
   <br>
   <br>
-
-  <%= render "solid_errors/occurrences/occurrence",
-        occurrence: @occurrence %>
+  <%= render "solid_errors/occurrences/occurrence", occurrence: @occurrence, occurrence_counter: @error.occurrences.size %>
 </body>
 </html>
