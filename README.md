@@ -166,6 +166,69 @@ config.middleware.use ActionDispatch::Session::CookieStore
 config.middleware.use ActionDispatch::Flash
 ```
 
+### Overwriting the views
+
+You can find the views in [`app/views`](https://github.com/fractaledmind/solid_errors/tree/main/app/views).
+
+```bash
+app/views/
+├── layouts
+│   └── solid_errors
+│       ├── _style.html
+│       └── application.html.erb
+└── solid_errors
+    ├── error_mailer
+    │   ├── error_occurred.html.erb
+    │   └── error_occurred.text.erb
+    ├── errors
+    │   ├── _actions.html.erb
+    │   ├── _error.html.erb
+    │   ├── _row.html.erb
+    │   ├── index.html.erb
+    │   └── show.html.erb
+    └── occurrences
+        ├── _collection.html.erb
+        └── _occurrence.html.erb
+```
+
+For instance overwriting [`app/views/layouts/solid_errors/application.html.erb`](https://github.com/fractaledmind/solid_errors/blob/main/app/views/layouts/solid_errors/application.html.erb).
+
+You can do:
+
+```erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solid Errors</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= render "layouts/solid_errors/style" %>
+  </head>
+  <body class="pb-4">
+    <main class="container mx-auto mt-4">
+      <%= content_for?(:content) ? yield(:content) : yield %>
+    </main>
+
+    <div class="fixed top-0 left-0 right-0 text-center py-2">
+      <% if notice.present? %>
+        <p class="py-2 px-3 bg-green-50 text-green-500 font-medium rounded-lg inline-block">
+          <%= notice %>
+        </p>
+      <% end %>
+
+      <% if alert.present? %>
+        <p class="py-2 px-3 bg-red-50 text-red-500 font-medium rounded-lg inline-block">
+          <%= alert %>
+        </p>
+      <% end %>
+    </div>
+  </body>
+</html>
+```
+
+This will remove the footer and the notice/alert fading.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
