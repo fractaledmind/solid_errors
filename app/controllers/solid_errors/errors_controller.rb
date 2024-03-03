@@ -1,5 +1,7 @@
 module SolidErrors
   class ErrorsController < ApplicationController
+    around_action :force_english_locale!
+
     before_action :set_error, only: %i[show update]
 
     # GET /errors
@@ -33,6 +35,10 @@ module SolidErrors
 
     def set_error
       @error = Error.find(params[:id])
+    end
+
+    def force_english_locale!(&action)
+      I18n.with_locale(:en, &action)
     end
   end
 end
