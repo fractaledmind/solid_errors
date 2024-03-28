@@ -166,6 +166,65 @@ config.middleware.use ActionDispatch::Session::CookieStore
 config.middleware.use ActionDispatch::Flash
 ```
 
+### Overwriting the views
+
+You can find the views in [`app/views`](https://github.com/fractaledmind/solid_errors/tree/main/app/views).
+
+```bash
+app/views/
+├── layouts
+│   └── solid_errors
+│       ├── _style.html
+│       └── application.html.erb
+└── solid_errors
+    ├── error_mailer
+    │   ├── error_occurred.html.erb
+    │   └── error_occurred.text.erb
+    ├── errors
+    │   ├── _actions.html.erb
+    │   ├── _error.html.erb
+    │   ├── _row.html.erb
+    │   ├── index.html.erb
+    │   └── show.html.erb
+    └── occurrences
+        ├── _collection.html.erb
+        └── _occurrence.html.erb
+```
+
+You can always take control of the views by creating your own views and/or partials at these paths in your application. For example, if you wanted to overwrite the application layout, you could create a file at `app/views/layouts/solid_errors/application.html.erb`. If you wanted to remove the footer and the automatically disappearing flash messages, as one concrete example, you could define that file as:
+
+```erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solid Errors</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= render "layouts/solid_errors/style" %>
+  </head>
+  <body class="pb-4">
+    <main class="container mx-auto mt-4">
+      <%= content_for?(:content) ? yield(:content) : yield %>
+    </main>
+
+    <div class="fixed top-0 left-0 right-0 text-center py-2">
+      <% if notice.present? %>
+        <p class="py-2 px-3 bg-green-50 text-green-500 font-medium rounded-lg inline-block">
+          <%= notice %>
+        </p>
+      <% end %>
+
+      <% if alert.present? %>
+        <p class="py-2 px-3 bg-red-50 text-red-500 font-medium rounded-lg inline-block">
+          <%= alert %>
+        </p>
+      <% end %>
+    </div>
+  </body>
+</html>
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
