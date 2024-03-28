@@ -191,9 +191,7 @@ app/views/
         └── _occurrence.html.erb
 ```
 
-For instance overwriting [`app/views/layouts/solid_errors/application.html.erb`](https://github.com/fractaledmind/solid_errors/blob/main/app/views/layouts/solid_errors/application.html.erb).
-
-You can do:
+You can always take control of the views by creating your own views and/or partials at these paths in your application. For example, if you wanted to overwrite the application layout, you could create a file at `app/views/layouts/solid_errors/application.html.erb`. If you wanted to remove the footer and the automatically disappearing flash messages, as one concrete example, you could define that file as:
 
 ```erb
 <!DOCTYPE html>
@@ -226,8 +224,6 @@ You can do:
   </body>
 </html>
 ```
-
-This will remove the footer and the notice/alert fading.
 
 ## Development
 
