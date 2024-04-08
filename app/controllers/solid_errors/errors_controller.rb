@@ -11,7 +11,9 @@ module SolidErrors
 
       @errors = Error.unresolved
         .joins(:occurrences)
-        .select(errors_table[Arel.star], occurrences_table[:created_at].maximum.as("recent_occurrence"))
+        .select(errors_table[Arel.star],
+          occurrences_table[:created_at].maximum.as("recent_occurrence"),
+          occurrences_table[:id].count.as("occurrences_count"))
         .group(errors_table[:id])
         .order(recent_occurrence: :desc)
     end

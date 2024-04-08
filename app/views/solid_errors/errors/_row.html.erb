@@ -11,10 +11,10 @@
     <pre class="whitespace-pre-wrap ml-6 mt-4"><%= error.message %></pre>
   </td>
   <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
-    <%= error.occurrences.size %>
+    <%= error.occurrences_count %>
   </td>
   <td scope="col" class="whitespace-nowrap px-3 py-4 pt-7 text-gray-500 text-right">
-    <% last_seen_at = error.occurrences.maximum(:created_at) %>
+    <% last_seen_at = error.recent_occurrence %>
     <abbr title="<%= last_seen_at.iso8601 %>" class="cursor-help">
       <%= time_tag last_seen_at, time_ago_in_words(last_seen_at, scope: 'datetime.distance_in_words.short') %>
     </abbr>
