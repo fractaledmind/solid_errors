@@ -13,14 +13,14 @@ module SolidErrors
         @count = collection.count
         @items = (params[:items] || 20).to_i
         @pages = [(@count.to_f / @items).ceil, 1].max
-        @page = (page = (params[:page] || 1).to_i) > @pages ? @pages : page
+        @page = ((page = (params[:page] || 1).to_i) > @pages) ? @pages : page
         @first = (1 unless @page == 1)
         @last = (@pages unless @page == @pages)
         @prev = (@page - 1 unless @page == 1)
-        @next = @page == @pages ? nil : @page + 1
+        @next = (@page == @pages) ? nil : @page + 1
         @offset = (@items * (@page - 1))
         @from = [@offset + 1, @count].min
-        @to   = [@offset + @items, @count].min
+        @to = [@offset + @items, @count].min
       end
     end
   end
