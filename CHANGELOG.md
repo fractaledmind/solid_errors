@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.1] - 2024-04-09
+
+- Ensure only first occurence is open on error page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/42))
+
 ## [0.4.0] - 2024-04-09
 
 - Add email notifications ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/3))
