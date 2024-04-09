@@ -6,9 +6,44 @@
       <h2 class="font-bold text-2xl">
         Occurrences
       </h2>
-      <p class="text-right">
-        Total: <strong><%= occurrences.size %></strong>
-      </p>
+      <div class="flex gap-x-4 pb-2">
+        <p class="text-right">
+          <% page_count = page.count %>
+          <% if page_count.zero? %>
+            No posts found
+          <% elsif page.pages == 1 %>
+            <strong><%= page_count %></strong> total
+          <% else %>
+            <strong><%= page.from %>-<%= page.to %></strong> of <strong><%= page_count %></strong>
+          <% end %>
+        </p>
+
+        <nav aria-label="Pages">
+          <% if (first_page = page.first) %>
+            <a href="<%= url_for(params.to_unsafe_hash.merge(page: first_page)) %>" aria-label="First" class="border border-black text-black bg-white py-1 px-2 cursor-pointer hover:bg-black hover:text-white">&laquo;</a>
+          <% else %>
+            <a role="link" aria-disabled="true" aria-label="First" class="border text-gray-500 bg-white py-1 px-2">&laquo;</a>
+          <% end %>
+
+          <% if (prev_page = page.prev) %>
+            <a href="<%= url_for(params.to_unsafe_hash.merge(page: prev_page)) %>" aria-label="Previous" class="border border-black text-black bg-white py-1 px-2 cursor-pointer hover:bg-black hover:text-white">&lsaquo;</a>
+          <% else %>
+            <a role="link" aria-disabled="true" aria-label="Previous" class="border text-gray-500 bg-white py-1 px-2">&lsaquo;</a>
+          <% end %>
+
+          <% if (next_page = page.next) %>
+            <a href="<%= url_for(params.to_unsafe_hash.merge(page: next_page)) %>" aria-label="Next" class="border border-black text-black bg-white py-1 px-2 cursor-pointer hover:bg-black hover:text-white">&rsaquo;</a>
+          <% else %>
+            <a role="link" aria-disabled="true" aria-label="Next" class="border text-gray-500 bg-white py-1 px-2">&rsaquo;</a>
+          <% end %>
+
+          <% if (last_page = page.last) %>
+            <a href="<%= url_for(params.to_unsafe_hash.merge(page: last_page)) %>" aria-label="Last" class="border border-black text-black bg-white py-1 px-2 cursor-pointer hover:bg-black hover:text-white">&raquo;</a>
+          <% else %>
+            <a role="link" aria-disabled="true" aria-label="Last" class="border text-gray-500 bg-white py-1 px-2">&raquo;</a>
+          <% end %>
+        </nav>
+      </div>
     </div>
   <% end %>
 
