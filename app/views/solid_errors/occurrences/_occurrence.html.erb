@@ -1,6 +1,6 @@
 <% seen_at = occurrence.created_at %>
 <% backtrace = occurrence.parsed_backtrace %>
-<% open ||= (defined?(occurrence_counter) && occurrence_counter.zero?) || true %>
+<% open ||= defined?(occurrence_counter) ? occurrence_counter.zero? : true %>
 
 <%= tag.section id: dom_id(occurrence), class: "" do %>
   <%= tag.details open: open do %>
