@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title>Solid Errors</title>
     <%= csrf_meta_tags %>
@@ -7,8 +7,8 @@
 
     <%= render "layouts/solid_errors/style" %>
   </head>
-  <body class="pb-4">
-    <main class="container mx-auto mt-4">
+  <body class="h-full flex flex-col pb-4">
+    <main class="grow container mx-auto mt-4">
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
 
