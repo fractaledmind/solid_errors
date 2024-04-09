@@ -112,7 +112,7 @@ config.solid_errors.password = Rails.application.credentials.solid_errors.passwo
 
 Either way, if you have set a username and password, Solid Errors will use basic HTTP authentication. If you have not set a username and password, Solid Errors will not require any authentication to view the dashboard.
 
-If you use Devise for authentication in your app, you can also restrict access to the dashboard by using their `authenticate` contraint in your routes file:
+If you use Devise for authentication in your app, you can also restrict access to the dashboard by using their `authenticate` constraint in your routes file:
 
 ```ruby
 authenticate :user, -> (user) { user.admin? } do

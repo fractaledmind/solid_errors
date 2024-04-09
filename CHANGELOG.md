@@ -1,5 +1,19 @@
 ## [Unreleased]
 
+## [0.4.0] - 2024-04-09
+
+- Add email notifications ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/3))
+- Add `fingerprint` column to `SolidErrors::Error` model ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/10))
+  + read more about the upgrade process in the [UPGRADE.md](./UPGRADE.md) file
+- Paginate error occurrences ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/39))
+- Ensure footer sticks to bottom of page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/40))
+- Fix `errors/index` view ([@dorianmariecom](https://github.com/fractaledmind/solid_errors/pull/25))
+- Fix `occurrences/_occurrence` partial ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/28))
+- Add documentation on ejecting views ([@dorianmariecom](https://github.com/fractaledmind/solid_errors/pull/30))
+- Only declare necessary Rails sub-systems as dependencies ([@everton](https://github.com/fractaledmind/solid_errors/pull/35))
+- Force :en locale inside ErrorsController to avoid missing translations ([@everton](https://github.com/fractaledmind/solid_errors/pull/36))
+- Avoid triggering N+1 on index page ([luizkowalski](https://github.com/fractaledmind/solid_errors/pull/38))
+
 ## [0.3.5] - 2024-02-06
 
 - Fix issue with `gsub!` on a frozen string ([@joelmoss](https://github.com/fractaledmind/solid_errors/pull/9))
