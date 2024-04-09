@@ -20,6 +20,8 @@ module SolidErrors
 
     # GET /errors/1
     def show
+      @page = Page.new(@error.occurrences, params)
+      @occurrences = @error.occurrences.offset(@page.offset).limit(@page.items)
     end
 
     # PATCH/PUT /errors/1
