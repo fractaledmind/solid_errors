@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.2] - 2024-04-10
+
+- Fix bug in error page when using Postgres ([@mintuhouse](https://github.com/fractaledmind/solid_errors/pull/43))
+
 ## [0.4.1] - 2024-04-09
 
 - Ensure only first occurence is open on error page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/42))
