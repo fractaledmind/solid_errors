@@ -27,7 +27,7 @@
 
 Solid Errors is a DB-based, app-internal exception tracker for Rails applications, designed with simplicity and performance in mind. It uses the new [Rails error reporting API](https://guides.rubyonrails.org/error_reporting.html) to store uncaught exceptions in the database, and provides a simple UI for viewing and managing exceptions.
 
-> [!WARNING]  
+> [!WARNING]
 > The current point release of Rails (7.1.3.2) has a bug which severely limits the utility of Solid Errors. Exceptions raised during a web request *are not* reported to Rails' error reporter. There is a fix in the `main` branch, but it has not been released in a new point release. As such, Solid Errors is **not** production-ready unless you are running Rails from the `main` branch or until a new point version is released and you upgrade.
 > The original bug report can be found [here](https://github.com/rails/rails/issues/51002) and the pull request making the fix is [here](https://github.com/rails/rails/pull/51050). I will try to backport the fix into the gem directly, but I haven't quite figured it out yet.
 
@@ -132,7 +132,7 @@ Solid Errors _can_ send email notifications whenever an error occurs, if your ap
 There are two ways to configure email notifications. First, you can use environment variables:
 
 ```ruby
-ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to true
+ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to false
 ENV["SOLIDERRORS_EMAIL_FROM"] = "errors@myapp.com" # defaults to "solid_errors@noreply.com"
 ENV["SOLIDERRORS_EMAIL_TO"] = "devs@myapp.com" # no default, must be set
 ```
