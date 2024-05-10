@@ -33,11 +33,11 @@
                     <span class="text-gray-500">in</span>
                     <code class="text-green-500 font-medium"><%= line.filtered_method %></code>
                   <% else %>
-                    <span class="text-gray-500"><%= line.unparsed_line %>
+                    <span class="text-gray-500"><%= line.unparsed_line %></span>
                   <% end %>
                 </summary>
-                <div><pre class="flex overflow-auto rounded-b-lg bg-slate-800 p-4 text-sm leading-normal text-white sm:rounded-t-lg"><code class="flex flex-col min-h-full min-w-content px-0"><% line.source.each do |n, code| %>
-                  <div class="line"><span class="mr-2 text-right select-none text-gray-600"><%= n %></span><span><%= code %></span></div>
+                <div><pre class="flex overflow-auto rounded-b-lg bg-slate-800 p-4 text-sm leading-normal text-white sm:rounded-t-lg"><code class="flex flex-1 flex-col min-h-full min-w-content px-0"><% line.source.each do |n, code| %>
+                    <div class="line <%= n == line.filtered_number.to_i ? 'bg-gray-600/50' : '' %>"><span class="mr-2 text-right select-none text-gray-600"><%= n %></span><span><%= code %></span></div>
                   <% end %></code></pre></div>
               <% end %>
             <% end %>
