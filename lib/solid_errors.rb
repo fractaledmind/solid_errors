@@ -27,7 +27,7 @@ module SolidErrors
     end
 
     def send_emails?
-      @send_emails ||= ENV["SOLIDERRORS_SEND_EMAILS"] || @@send_emails || true
+      @send_emails ||= ENV["SOLIDERRORS_SEND_EMAILS"] || @@send_emails || false
     end
 
     def email_from
