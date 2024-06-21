@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.4.3] - 2024-06-21
+
+- fix `SolidErrors.send_emails?` that always returns true ([@defkode](https://github.com/fractaledmind/solid_errors/pull/46))
+- Highlight source line ([@Bhacaz](https://github.com/fractaledmind/solid_errors/pull/47))
+- Lastest occurences first ([@Bhacaz](https://github.com/fractaledmind/solid_errors/pull/48))
+- Fix partial not being found with different inflector [@emilioeduardob](https://github.com/fractaledmind/solid_errors/pull/50)
+
 ## [0.4.2] - 2024-04-10
 
 - Fix bug in error page when using Postgres ([@mintuhouse](https://github.com/fractaledmind/solid_errors/pull/43))
@@ -12,7 +19,7 @@
 
 - Add email notifications ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/3))
 - Add `fingerprint` column to `SolidErrors::Error` model ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/10))
-  + read more about the upgrade process in the [UPGRADE.md](./UPGRADE.md) file
+  - read more about the upgrade process in the [UPGRADE.md](./UPGRADE.md) file
 - Paginate error occurrences ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/39))
 - Ensure footer sticks to bottom of page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/40))
 - Fix `errors/index` view ([@dorianmariecom](https://github.com/fractaledmind/solid_errors/pull/25))
