@@ -49,7 +49,8 @@
 
   <div class="min-w-full">
     <% if occurrences.any? %>
-      <%= render occurrences %>
+      <%= render partial: "solid_errors/occurrences/occurrence",
+            collection: occurrences, as: :occurrence %>
     <% else %>
       <div class="flex items-center justify-center gap-2">
         <%= bootstrap_svg "list-ul" %>

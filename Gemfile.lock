@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    solid_errors (0.4.2)
+    solid_errors (0.4.3)
       actionmailer (>= 7)
       actionpack (>= 7)
       actionview (>= 7)
