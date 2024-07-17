@@ -34,4 +34,6 @@ Gem::Specification.new do |spec|
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
+
+  spec.post_install_message = "Remember to run `rails solid_errors:install_migrations` to copy *and* run new migrations."
 end

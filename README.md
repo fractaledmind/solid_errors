@@ -135,6 +135,7 @@ There are two ways to configure email notifications. First, you can use environm
 ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to false
 ENV["SOLIDERRORS_EMAIL_FROM"] = "errors@myapp.com" # defaults to "solid_errors@noreply.com"
 ENV["SOLIDERRORS_EMAIL_TO"] = "devs@myapp.com" # no default, must be set
+ENV["SOLIDERRORS_ONE_EMAIL_PER_OCCURRENCE"] = false # defaults to false
 ```
 
 Second, you can set the values via the configuration object:
@@ -144,9 +145,13 @@ Second, you can set the values via the configuration object:
 config.solid_errors.send_emails = true
 config.solid_errors.email_from = "errors@myapp.com"
 config.solid_errors.email_to = "devs@myapp.com"
+# Tell Solid Errors whether or not to limit the total emails per occurrence. Defaults to false.
+config.solid_errors.one_email_per_occurrence = true
 ```
 
 If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
+
+If you have set `send_emails` to `true` and have set `one_email_per_occurrence` to `true`, Solid Errors will only send an email notification after the first occurrence of a new error or the first reoccurrence of a previously resolved error. If you have not set `one_email_per_occurrence` to `true`, Solid Errors will send an email notification for each occurrence of an error.
 
 ### Examples
 

@@ -34,7 +34,7 @@ module SolidErrors
 
     # Only allow a list of trusted parameters through.
     def error_params
-      params.require(:error).permit(:resolved_at)
+      params.require(:error).permit(:resolved_at, :prev_resolved_at)
     end
 
     def set_error
