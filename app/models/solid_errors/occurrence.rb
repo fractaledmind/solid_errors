@@ -27,7 +27,7 @@ module SolidErrors
     def should_send_email?
       return false unless SolidErrors.send_emails?
       return false unless SolidErrors.email_to.present?
-      return true if error.occurrences.count == 1
+      return true if error.occurrences.one?
 
       error.occurrences.where(created_at: error.prev_resolved_at..).one?
     end
