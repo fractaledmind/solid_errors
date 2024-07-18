@@ -243,8 +243,6 @@ config.solid_errors.email_subject_prefix = "[#{Rails.application.name}][#{Rails.
 
 If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
 
-If you have set `send_emails` to `true` and have set `one_email_per_occurrence` to `true`, Solid Errors will only send an email notification after the first occurrence of a new error or the first reoccurrence of a previously resolved error. If you have not set `one_email_per_occurrence` to `true`, Solid Errors will send an email notification for each occurrence of an error.
-
 ### Examples
 
 There are only two screens in the dashboard.
