@@ -34,7 +34,7 @@ module SolidErrors
 
     # only send one email per occurrence while the issue is Unresolved
     # if the issue was resolved and then reoccurs, another email will be sent
-    def one_email_per_occurrence
+    def one_email_per_occurrence?
       @one_email_per_occurrence ||= ENV["SOLIDERRORS_ONE_EMAIL_PER_OCCURRENCE"] || @@one_email_per_occurrence || false
     end
 
