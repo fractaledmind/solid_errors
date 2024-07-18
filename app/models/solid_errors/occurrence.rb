@@ -25,12 +25,10 @@ module SolidErrors
     end
 
     def should_send_email?
-      SolidErrors.send_emails? && SolidErrors.email_to.present? && under_limit?
-    end
-
-    def under_limit?
+      return false unless SolidErrors.send_emails?
+      return false unless SolidErrors.email_to.present?
       return true if error.occurrences.count == 1
-      return true if !SolidErrors.one_email_per_occurrence
+      return true unless SolidErrors.one_email_per_occurrence?
 
       error.occurrences.where(created_at: error.prev_resolved_at..).one?
     end
