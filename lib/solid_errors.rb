@@ -10,7 +10,6 @@ module SolidErrors
   mattr_writer :username
   mattr_writer :password
   mattr_writer :send_emails
-  mattr_writer :one_email_per_occurrence
   mattr_writer :email_from
   mattr_writer :email_to
 
@@ -29,12 +28,6 @@ module SolidErrors
 
     def send_emails?
       @send_emails ||= ENV["SOLIDERRORS_SEND_EMAILS"] || @@send_emails || false
-    end
-
-    # only send one email per occurrence while the issue is Unresolved
-    # if the issue was resolved and then reoccurs, another email will be sent
-    def one_email_per_occurrence?
-      @one_email_per_occurrence ||= ENV["SOLIDERRORS_ONE_EMAIL_PER_OCCURRENCE"] || @@one_email_per_occurrence || false
     end
 
     def email_from
