@@ -11,8 +11,15 @@ namespace :solid_errors do
         FileUtils.cp(migration, destination)
       end
     end
-
-    puts "Running migrations from Solid Errors"
-    Rake::Task["db:migrate"].invoke
+    # this could be a way to "force" a migration to run in the future but
+    # the more thought into this, it seems too rigid and hard-coded
+    # Plus, after we copy the migration over, Rails will alert a user
+    # to run migrations/there are pending migrations.
+    # Set version for our specific migration
+    # ENV["VERSION"] = "20240716154238"
+    # Run just our specific migration file
+    # Rake::Task["db:migrate:up"].invoke
+    # Now clear that!
+    # ENV["VERSION"] = nil
   end
 end
