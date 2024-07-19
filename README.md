@@ -91,6 +91,11 @@ authenticate :user, -> (user) { user.admin? } do
 end
 ```
 
+After updating the gem, run the migration installer so that any new migrations are copied over:
+```bash
+$ rails solid_errors:install_migrations
+```
+
 > [!NOTE]
 > Be sure to [secure the dashboard](#authentication) in production.
 
