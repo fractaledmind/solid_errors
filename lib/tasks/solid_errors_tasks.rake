@@ -9,7 +9,7 @@ namespace :solid_errors do
       timestamp = Time.now.strftime('%Y%m%d%H%M%S_')
       filename_with_timestamp = "#{timestamp}#{original_filename}"
 
-      if Dir.glob("#{destination}/**/*#{original_filename}*").empty?
+      if Dir.glob("#{destination}/*#{original_filename}*").empty?
         puts "Copying #{original_filename} to #{filename_with_timestamp} from Solid Errors to Rails application"
         FileUtils.cp(migration, File.join(destination, filename_with_timestamp))
       end
