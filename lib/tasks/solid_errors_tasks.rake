@@ -2,7 +2,7 @@ namespace :solid_errors do
   desc "Copy and run migrations from Solid Errors"
   task install_migrations: :environment do
     source = File.expand_path("../../solid_errors/db/migrate", __FILE__)
-    destination = File.join(Rails.root, "db", "migrate")
+    destination = Rails.root.join('db', 'migrate')
 
     Dir.glob("#{source}/*.rb").each do |migration|
       original_filename = File.basename(migration)
