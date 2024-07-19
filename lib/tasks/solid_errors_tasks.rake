@@ -4,8 +4,7 @@ namespace :solid_errors do
     source = File.expand_path("../../solid_errors/db/migrate", __FILE__)
     destination = Rails.root.join('db', 'migrate')
 
-    Dir.glob("#{source}/*.rb").each do |migration|
-      original_filename = File.basename(migration)
+    Dir.children(source).each do |migration|
       timestamp = Time.now.strftime('%Y%m%d%H%M%S_')
       filename_with_timestamp = "#{timestamp}#{original_filename}"
 
