@@ -10,7 +10,7 @@ namespace :solid_errors do
 
       if Dir.glob("#{destination}/*#{migration}").empty?
         puts "Copying #{migration} to #{filename_with_timestamp} from Solid Errors to Rails application"
-        FileUtils.cp(migration, File.join(destination, filename_with_timestamp))
+        FileUtils.cp(File.join(source, migration), File.join(destination, filename_with_timestamp))
       end
     end
   end
