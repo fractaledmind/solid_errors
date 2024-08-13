@@ -29,5 +29,9 @@ module SolidErrors
     def badge_classes
       "px-2 inline-flex text-sm font-semibold rounded-md #{SEVERITY_TO_BADGE_CLASSES[severity.to_sym]}"
     end
+
+    def resolved?
+      resolved_at.present?
+    end
   end
 end
