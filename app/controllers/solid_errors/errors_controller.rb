@@ -6,12 +6,17 @@ module SolidErrors
 
     # GET /errors
     def index
-      @errors = get_errors(base_scope: Error.unresolved)
-    end
+      errors_table = Error.arel_table
+      occurrences_table = Occurrence.arel_table
+      scope = params[:scope] == "resolved" ? Error.resolved : Error.unresolved
 
-    # GET /errors/resolved
-    def resolved
-      @errors = get_errors(base_scope: Error.resolved)
+      @errors = scope
+        .joins(:occurrences)
+        .select(errors_table[Arel.star],
+          occurrences_table[:created_at].maximum.as("recent_occurrence"),
+          occurrences_table[:id].count.as("occurrences_count"))
+        .group(errors_table[:id])
+        .order(recent_occurrence: :desc)
     end
 
     # GET /errors/1
@@ -30,7 +35,7 @@ module SolidErrors
     def destroy
       if @error.resolved?
         @error.destroy
-        redirect_to resolved_errors_path, notice: "Error deleted."
+        redirect_to errors_path(scope: :resolved), notice: "Error deleted."
       else
         redirect_to error_path(@error), alert: "You must resolve the error before deleting it."
       end
@@ -45,19 +50,6 @@ module SolidErrors
 
     def set_error
       @error = Error.find(params[:id])
-    end
-
-    def get_errors(base_scope:)
-      errors_table = Error.arel_table
-      occurrences_table = Occurrence.arel_table
-
-      base_scope
-        .joins(:occurrences)
-        .select(errors_table[Arel.star],
-          occurrences_table[:created_at].maximum.as("recent_occurrence"),
-          occurrences_table[:id].count.as("occurrences_count"))
-        .group(errors_table[:id])
-        .order(recent_occurrence: :desc)
     end
 
     def force_english_locale!(&action)
