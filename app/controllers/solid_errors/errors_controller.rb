@@ -8,9 +8,10 @@ module SolidErrors
     def index
       errors_table = Error.arel_table
       occurrences_table = Occurrence.arel_table
-      scope = params[:scope] == "resolved" ? Error.resolved : Error.unresolved
+      @is_resolved_scope = params[:scope] == "resolved"
 
-      @errors = scope
+      query_scope = @is_resolved_scope ? Error.resolved : Error.unresolved
+      @errors = query_scope
         .joins(:occurrences)
         .select(errors_table[Arel.star],
           occurrences_table[:created_at].maximum.as("recent_occurrence"),
