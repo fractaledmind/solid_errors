@@ -20,5 +20,14 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails"
+  ">= 7.0".tap do |rails_version|
+    spec.add_dependency "actionmailer", rails_version
+    spec.add_dependency "actionpack", rails_version
+    spec.add_dependency "actionview", rails_version
+    spec.add_dependency "activerecord", rails_version
+    spec.add_dependency "activesupport", rails_version
+    spec.add_dependency "railties", rails_version
+  end
+
+  spec.add_development_dependency "sqlite3"
 end
