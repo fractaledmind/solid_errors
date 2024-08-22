@@ -74,6 +74,54 @@ Please consult the [official guides](https://guides.rubyonrails.org/error_report
 
 There are intentionally few features; you can view and resolve errors. That’s it. The goal is to provide a simple, lightweight, and performant solution for tracking exceptions in your Rails application. If you need more features, you should probably use a 3rd party service like [Honeybadger](https://www.honeybadger.io/), whose MIT-licensed [Ruby agent gem](https://github.com/honeybadger-io/honeybadger-ruby) provided a couple of critical pieces of code for this project.
 
+### Manually reporting an Error
+
+Errors can be added to Solid Errors via the [Rails error reporter](https://guides.rubyonrails.org/error_reporting.html).
+
+There are [three ways](https://guides.rubyonrails.org/error_reporting.html#using-the-error-reporter) you can use the error reporter:
+
+`Rails.error.handle` will report any error raised within the block. It will then swallow the error, and the rest of your code outside the block will continue as normal.
+
+```ruby
+result = Rails.error.handle do
+  1 + '1' # raises TypeError
+end
+result # => nil
+1 + 1 # This will be executed
+```
+
+`Rails.error.record` will report errors to all registered subscribers and then re-raise the error, meaning that the rest of your code won't execute.
+
+```ruby
+Rails.error.record do
+  1 + '1' # raises TypeError
+end
+1 + 1 # This won't be executed
+```
+
+You can also manually report errors by calling `Rails.error.report`:
+
+```ruby
+begin
+  # code
+rescue StandardError => e
+  Rails.error.report(e)
+end
+```
+
+All 3 reporting APIs (`#handle`, `#record`, and `#report`) support the following options, which are then passed along to all registered subscribers:
+
+* `handled`: a Boolean to indicate if the error was handled. This is set to `true` by default. `#record` sets this to `false`.
+* `severity`: a Symbol describing the severity of the error. Expected values are: `:error`, `:warning`, and `:info`. `#handle` sets this to `:warning`, while `#record` sets it to `:error`.
+* `context`: a Hash to provide more context about the error, like request or user details
+* `source`: a String about the source of the error. The default source is `"application"`. Errors reported by internal libraries may set other sources; the Redis cache library may use "redis_cache_store.active_support", for instance. Your subscriber can use the source to ignore errors you aren't interested in.
+
+```ruby
+Rails.error.handle(context: { user_id: user.id }, severity: :info) do
+  # ...
+end
+```
+
 ### Configuration
 
 You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, 6 configuration options are available:

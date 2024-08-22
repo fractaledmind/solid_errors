@@ -3,7 +3,7 @@
 <%= tag.section id: dom_id(error), class: "space-y-6" do %>
   <div class="flex justify-between items-center">
     <%= tag.h1 class: "font-bold flex items-center text-2xl gap-2" do %>
-      <%= error.emoji %>
+      <%= error.severity_emoji %>
       <code><%= error.exception_class %></code>
       from
       <em><code><%= error.source %></code></em>
@@ -14,9 +14,31 @@
     </small>
   </div>
 
-  <pre class=""><%= error.message %></pre>
+  <pre class="whitespace-pre-wrap"><%= error.message %></pre>
 
   <dl class="flex-1 grid grid-cols-2 gap-x-4">
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:severity) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <%= error.severity_emoji %>
+        <span class="<%= error.severity_badge_classes %>">
+          <%= error.severity %>
+        </span>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-x-2">
+      <dt class="font-bold">
+        <%= SolidErrors::Error.human_attribute_name(:status) %>
+      </dt>
+      <dd class="inline-flex items-center gap-1">
+        <%= error.status_emoji %>
+        <span class="<%= error.status_badge_classes %>">
+          <%= error.status %>
+        </span>
+      </dd>
+    </div>
     <div class="flex items-center justify-between flex-wrap gap-x-2">
       <dt class="font-bold">
         <%= SolidErrors::Error.human_attribute_name(:first_seen) %>
@@ -43,29 +65,10 @@
     </div>
     <div class="flex items-center justify-between flex-wrap gap-x-2">
       <dt class="font-bold">
-        <%= SolidErrors::Error.human_attribute_name(:occurrences) %>
-      </dt>
-      <dd class="inline-flex items-center gap-1">
-        <%= error.occurrences.size %>
-      </dd>
-    </div>
-    <div class="flex items-center justify-between flex-wrap gap-x-2">
-      <dt class="font-bold">
         <%= SolidErrors::Error.human_attribute_name(:exception_class) %>
       </dt>
       <dd class="inline-flex items-center gap-1">
         <code><%= error.exception_class %></code>
-      </dd>
-    </div>
-    <div class="flex items-center justify-between flex-wrap gap-x-2">
-      <dt class="font-bold">
-        <%= SolidErrors::Error.human_attribute_name(:severity) %>
-      </dt>
-      <dd class="inline-flex items-center gap-1">
-        <%= error.emoji %>
-        <span class="<%= error.badge_classes %>">
-          <%= error.severity %>
-        </span>
       </dd>
     </div>
     <div class="flex items-center justify-between flex-wrap gap-x-2">

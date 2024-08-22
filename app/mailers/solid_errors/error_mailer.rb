@@ -6,7 +6,7 @@ module SolidErrors
       @error = occurrence.error
 
       mail(
-        subject: "#{@error.emoji} #{@error.exception_class}",
+        subject: "#{@error.severity_emoji} #{@error.exception_class}",
         from: SolidErrors.email_from,
         to: SolidErrors.email_to
       )

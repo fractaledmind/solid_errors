@@ -20,8 +20,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  # Uncomment to register a new dependency of your gem
-  "~> 7.0".tap do |rails_version|
+  ">= 7.0".tap do |rails_version|
     spec.add_dependency "actionmailer", rails_version
     spec.add_dependency "actionpack", rails_version
     spec.add_dependency "actionview", rails_version
