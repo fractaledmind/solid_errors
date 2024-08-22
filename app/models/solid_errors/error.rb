@@ -18,7 +18,7 @@ module SolidErrors
     }
     STATUS_TO_BADGE_CLASSES = {
       resolved: "bg-green-100 text-green-800",
-      unresolved: "bg-violet-100 text-violet-800",
+      unresolved: "bg-violet-100 text-violet-800"
     }
 
     has_many :occurrences, class_name: "SolidErrors::Occurrence", dependent: :destroy
