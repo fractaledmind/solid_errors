@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.5.0] - 2024-08-22
+
+- introduce ability to view resolved errors and delete them ([@acoffman](https://github.com/fractaledmind/solid_errors/pull/56))
+- loosen Rails dependency constraints to allow for Rails 8 ([@dorianmariecom](https://github.com/fractaledmind/solid_errors/pull/58))
+- update README.md with rails error reporting example ([@stillhart](https://github.com/fractaledmind/solid_errors/pull/57))
+
 ## [0.4.3] - 2024-06-21
 
 - fix `SolidErrors.send_emails?` that always returns true ([@defkode](https://github.com/fractaledmind/solid_errors/pull/46))
