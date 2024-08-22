@@ -1,4 +1,25 @@
-<%= render "solid_errors/errors/nav", is_resolved_scope: @is_resolved_scope %>
+<div class="mb-6 border-b border-gray-300 flex justify-between items-baseline">
+  <h1 class="font-bold flex items-center text-2xl gap-2">
+    Errors
+  </h1>
+  <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+    <%= link_to errors_path(scope: :unresolved), class: class_names(
+          "inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium",
+          "border-blue-500 text-blue-500" => !error_scope.resolved?,
+          "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" => error_scope.resolved?) do %>
+      <span class="mr-2"><%= SolidErrors::Error::STATUS_TO_EMOJI[:unresolved] %></span>
+      <span>Unresolved</span>
+    <% end %>
+    <%= link_to errors_path(scope: :resolved), class: class_names(
+          "inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium",
+          "border-blue-500 text-blue-500" => error_scope.resolved?,
+          "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" => !error_scope.resolved?) do %>
+      <span class="mr-2"><%= SolidErrors::Error::STATUS_TO_EMOJI[:resolved] %></span>
+      <span>Resolved</span>
+    <% end %>
+  </nav>
+</div>
+
 <table class="min-w-full divide-y divide-gray-300">
   <thead>
     <tr>

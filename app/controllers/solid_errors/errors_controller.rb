@@ -4,13 +4,13 @@ module SolidErrors
 
     before_action :set_error, only: %i[show update destroy]
 
+    helper_method :error_scope
+
     # GET /errors
     def index
       errors_table = Error.arel_table
       occurrences_table = Occurrence.arel_table
-      @is_resolved_scope = params[:scope] == "resolved"
-
-      query_scope = @is_resolved_scope ? Error.resolved : Error.unresolved
+      query_scope = error_scope.resolved? ? Error.resolved : Error.unresolved
       @errors = query_scope
         .joins(:occurrences)
         .select(errors_table[Arel.star],
@@ -55,6 +55,10 @@ module SolidErrors
 
     def force_english_locale!(&action)
       I18n.with_locale(:en, &action)
+    end
+
+    def error_scope
+      ActiveSupport::StringInquirer.new(params[:scope] || "unresolved")
     end
   end
 end
