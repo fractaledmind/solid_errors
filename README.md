@@ -58,6 +58,11 @@ authenticate :user, -> (user) { user.admin? } do
 end
 ```
 
+After updating the gem, run the migration installer so that any new migrations are copied over:
+```bash
+$ rails solid_errors:install_migrations
+```
+
 > [!NOTE]
 > Be sure to [secure the dashboard](#authentication) in production.
 
@@ -194,7 +199,9 @@ config.solid_errors.email_from = "errors@myapp.com"
 config.solid_errors.email_to = "devs@myapp.com"
 ```
 
-If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
+If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification when an error first occurs. Subsequent occurrences of the error will not trigger additional emails to be sent; however, if an error is resolved and then reoccurs, an email will be sent, again, on the first reoccurrence of the error.
+
+If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
 
 ### Examples
 

@@ -32,7 +32,7 @@ module SolidErrors
       }
       fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
       if (record = SolidErrors::Error.find_by(fingerprint: fingerprint))
-        record.update!(resolved_at: nil, updated_at: Time.now)
+        record.update!(prev_resolved_at: record.resolved_at, resolved_at: nil, updated_at: Time.now)
       else
         record = SolidErrors::Error.create!(error_attributes.merge(fingerprint: fingerprint))
       end

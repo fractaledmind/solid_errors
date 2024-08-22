@@ -30,4 +30,9 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency "sqlite3"
+
+  # For more information and examples about making a new gem, check out our
+  # guide at: https://bundler.io/guides/creating_gem.html
+
+  spec.post_install_message = "Remember to run `rails solid_errors:install_migrations` to copy any new migrations."
 end
