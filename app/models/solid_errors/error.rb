@@ -26,7 +26,7 @@ module SolidErrors
       SEVERITY_TO_EMOJI[severity.to_sym]
     end
 
-    def badge_classes
+    def severity_badge_classes
       "px-2 inline-flex text-sm font-semibold rounded-md #{SEVERITY_TO_BADGE_CLASSES[severity.to_sym]}"
     end
 
