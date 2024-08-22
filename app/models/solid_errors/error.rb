@@ -22,7 +22,7 @@ module SolidErrors
     scope :resolved, -> { where.not(resolved_at: nil) }
     scope :unresolved, -> { where(resolved_at: nil) }
 
-    def emoji
+    def severity_emoji
       SEVERITY_TO_EMOJI[severity.to_sym]
     end
 
