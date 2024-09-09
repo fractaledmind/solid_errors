@@ -5,4 +5,4 @@ Example:
     bin/rails generate solid_errors:install
 
     This will perform the following:
-        Installs solid_errors migrations
+        Adds solid_errors db schema
