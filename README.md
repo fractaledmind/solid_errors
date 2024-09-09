@@ -49,7 +49,40 @@ After installing the gem, run the installer:
 $ rails generate solid_errors:install
 ```
 
-This will copy the required migration over to your app.
+This will create the `db/errors_schema.rb` file.
+
+You will then have to add the configuration for the errors database in `config/database.yml`. If you're using sqlite, it'll look something like this:
+
+```yaml
+production:
+  primary:
+    <<: *default
+    database: storage/production.sqlite3
+  errors:
+    <<: *default
+    database: storage/production_errors.sqlite3
+    migrations_paths: db/errors_migrate
+```
+
+...or if you're using MySQL/PostgreSQL/Trilogy:
+
+```yaml
+production:
+  primary: &primary_production
+    <<: *default
+    database: app_production
+    username: app
+    password: <%= ENV["APP_DATABASE_PASSWORD"] %>
+  errors:
+    <<: *primary_production
+    database: app_production_errors
+    migrations_paths: db/errors_migrate
+```
+
+> [!NOTE]
+> Calling `bin/rails solid_errors:install` will automatically add `config.solid_errors.connects_to = { database: { writing: :errors } }` to `config/environments/production.rb`, so no additional configuration is needed there (although you must make sure that you use the errors name in database.yml for this to match!). But if you want to use Solid Queue in a different environment (like staging or even development), you'll have to manually add that `config.solid_errors.connects_to` line to the respective environment file. And, as always, make sure that the name you're using for the database in `config/database.yml` matches the name you use in `config.solid_errors.connects_to`.
+
+Then run `db:prepare` in production to ensure the database is created and the schema is loaded.
 
 Then mount the engine in your `config/routes.rb` file:
 ```ruby
