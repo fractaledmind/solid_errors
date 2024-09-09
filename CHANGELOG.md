@@ -3,6 +3,7 @@
 ## [0.6.0] - 2024-09-09
 
 - Slim down installer and have it use a final schema instead of migrations ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/60))
+- Fix rails 8 warning: "Drawing a route with a hash key name is deprecated" ([@dorianmariecom](https://github.com/fractaledmind/solid_errors/pull/59))
 
 ## [0.5.0] - 2024-08-22
 
