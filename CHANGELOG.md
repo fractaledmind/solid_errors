@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.6.0] - 2024-09-09
+
+- Slim down installer and have it use a final schema instead of migrations ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/60))
+
 ## [0.5.0] - 2024-08-22
 
 - introduce ability to view resolved errors and delete them ([@acoffman](https://github.com/fractaledmind/solid_errors/pull/56))
