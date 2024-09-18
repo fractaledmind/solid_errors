@@ -9,7 +9,7 @@ module SolidErrors
     source_root File.expand_path("templates", __dir__)
 
     def add_solid_errors_db_schema
-      template "errors_schema.rb"
+      template "db/errors_schema.rb"
     end
 
     def configure_solid_errors
