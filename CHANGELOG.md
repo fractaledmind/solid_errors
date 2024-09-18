@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.6.1] - 2024-09-19
+
+- Fix the install generator by putting the schema in the db/ directory ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/62))
+
 ## [0.6.0] - 2024-09-09
 
 - Slim down installer and have it use a final schema instead of migrations ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/60))
