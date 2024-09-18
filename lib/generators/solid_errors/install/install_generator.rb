@@ -9,7 +9,7 @@ module SolidErrors
     source_root File.expand_path("templates", __dir__)
 
     def add_solid_errors_db_schema
-      template "errors_schema.rb"
+      template "db/errors_schema.rb"
     end
 
     def configure_solid_errors
@@ -22,7 +22,7 @@ module SolidErrors
           '\1config.solid_errors.email_from = ""',
           '\1config.solid_errors.email_to = ""',
           '\1config.solid_errors.username = Rails.application.credentials.dig(:solid_errors, :username)',
-          '\1config.solid_errors.password = Rails.application.credentials.dig(:solid_errors, :password)',
+          '\1config.solid_errors.password = Rails.application.credentials.dig(:solid_errors, :password)'
         ].join("\n")
       end
     end
