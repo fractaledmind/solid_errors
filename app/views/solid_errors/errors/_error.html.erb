@@ -10,7 +10,9 @@
     <% end %>
 
     <small class="text-base">
-      #<code><%= error.id %></code>
+      <code>
+        <%= link_to_if Rails.application.config.action_mailer.default_url_options[:host].present?, "##{error.id}", error_url(error) %>
+      </code>
     </small>
   </div>
 
