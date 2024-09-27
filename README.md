@@ -311,6 +311,17 @@ You can always take control of the views by creating your own views and/or parti
 </html>
 ```
 
+## Sponsors
+
+<p align="center">
+  <em>Proudly sponsored by</em>
+</p>
+<p align="center">
+  <a href="https://www.honeybadger.io?utm_source=fractaledmind&utm_medium=open-source&utm_campaign=solid_errors">
+    <img src="https://honeybadger-static.s3.amazonaws.com/brand_assets/honeybadger_logo/honeybadger_logo.svg" width="575" />
+  </a>
+</p>
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -328,3 +339,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the SolidErrors project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fractaledmind/solid_errors/blob/main/CODE_OF_CONDUCT.md).
+

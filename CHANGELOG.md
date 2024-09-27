@@ -19,7 +19,7 @@
 
 - fix `SolidErrors.send_emails?` that always returns true ([@defkode](https://github.com/fractaledmind/solid_errors/pull/46))
 - Highlight source line ([@Bhacaz](https://github.com/fractaledmind/solid_errors/pull/47))
-- Lastest occurences first ([@Bhacaz](https://github.com/fractaledmind/solid_errors/pull/48))
+- Latest occurrences first ([@Bhacaz](https://github.com/fractaledmind/solid_errors/pull/48))
 - Fix partial not being found with different inflector [@emilioeduardob](https://github.com/fractaledmind/solid_errors/pull/50)
 
 ## [0.4.2] - 2024-04-10
@@ -28,7 +28,7 @@
 
 ## [0.4.1] - 2024-04-09
 
-- Ensure only first occurence is open on error page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/42))
+- Ensure only first occurrence is open on error page ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/42))
 
 ## [0.4.0] - 2024-04-09
 
