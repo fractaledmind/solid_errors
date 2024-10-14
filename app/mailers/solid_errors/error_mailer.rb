@@ -4,9 +4,10 @@ module SolidErrors
     def error_occurred(occurrence)
       @occurrence = occurrence
       @error = occurrence.error
-
+      subject = "#{@error.severity_emoji} #{@error.exception_class}"
+      subject.prepend(SolidErrors.subject_prefix) if SolidErrors.subject_prefix.present?
       mail(
-        subject: "#{SolidErrors.subject_prefix} #{@error.severity_emoji} #{@error.exception_class}",
+        subject: subject,
         from: SolidErrors.email_from,
         to: SolidErrors.email_to
       )
