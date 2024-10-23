@@ -161,6 +161,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
+
 #### Database Configuration
 
 `config.solid_errors.connects_to` takes a custom database configuration hash that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app. For example:
