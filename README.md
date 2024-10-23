@@ -216,7 +216,7 @@ There are two ways to configure email notifications. First, you can use environm
 ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to false
 ENV["SOLIDERRORS_EMAIL_FROM"] = "errors@myapp.com" # defaults to "solid_errors@noreply.com"
 ENV["SOLIDERRORS_EMAIL_TO"] = "devs@myapp.com" # no default, must be set
-ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"] = "[Application name][Application environment]" # no default, optional
+ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"] = "[Application name][Environment]" # no default, optional
 ```
 
 Second, you can set the values via the configuration object:
