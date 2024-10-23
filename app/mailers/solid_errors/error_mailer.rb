@@ -5,7 +5,9 @@ module SolidErrors
       @occurrence = occurrence
       @error = occurrence.error
       subject = "#{@error.severity_emoji} #{@error.exception_class}"
-      subject.prepend(SolidErrors.email_subject_prefix) if SolidErrors.email_subject_prefix.present?
+      if SolidErrors.email_subject_prefix.present?
+        subject = [SolidErrors.email_subject_prefix, subject].join(" ").squish!
+      end
       mail(
         subject: subject,
         from: SolidErrors.email_from,
