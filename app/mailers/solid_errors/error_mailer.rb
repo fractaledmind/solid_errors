@@ -4,9 +4,12 @@ module SolidErrors
     def error_occurred(occurrence)
       @occurrence = occurrence
       @error = occurrence.error
-
+      subject = "#{@error.severity_emoji} #{@error.exception_class}"
+      if SolidErrors.email_subject_prefix.present?
+        subject = [SolidErrors.email_subject_prefix, subject].join(" ").squish!
+      end
       mail(
-        subject: "#{@error.severity_emoji} #{@error.exception_class}",
+        subject: subject,
         from: SolidErrors.email_from,
         to: SolidErrors.email_to
       )
