@@ -12,7 +12,7 @@ module SolidErrors
   mattr_writer :send_emails
   mattr_writer :email_from
   mattr_writer :email_to
-  mattr_writer :subject_prefix
+  mattr_writer :email_subject_prefix
 
   class << self
     # use method instead of attr_accessor to ensure
@@ -39,8 +39,8 @@ module SolidErrors
       @email_to ||= ENV["SOLIDERRORS_EMAIL_TO"] || @@email_to
     end
 
-    def subject_prefix
-      @subject_prefix ||= ENV["SOLIDERRORS_SUBJECT_PREFIX"] || @@subject_prefix
+    def email_subject_prefix
+      @email_subject_prefix ||= ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"] || @@email_subject_prefix
     end
   end
 end
