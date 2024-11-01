@@ -162,9 +162,9 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 
-#### Database Configuration
+### Database Configuration
 
-`config.solid_errors.connects_to` takes a custom database configuration hash that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app. For example:
+`config.solid_errors.connects_to` takes a custom database configuration hash that will be used in the abstract `SolidErrors::Record` Active Record model. This is required to use a different database than the main app ([but the primary database can also be used](#single-database-configuration)). For example:
 
 ```ruby
 # Use a single separate DB for Solid Errors
@@ -177,6 +177,16 @@ or
 # Use a separate primary/replica pair for Solid Errors
 config.solid_errors.connects_to = { database: { writing: :solid_errors_primary, reading: :solid_errors_replica } }
 ```
+
+#### Single Database Configuration
+
+Running Solid Errors in a separate database is recommended, but it's also possible to use one single database for both the app and the errors. Just follow these steps to add errors to the primary database:
+
+1. Copy the contents of `db/errors_schema.rb` into a normal migration and delete `db/errors_schema.rb`
+2. Remove `config.solid_errors.connects_to` from your configuration files.
+3. Migrate your database.
+
+You won't have multiple databases, so `database.yml` doesn't need to have the errors database configuration.
 
 #### Authentication
 
