@@ -3,6 +3,7 @@ module SolidErrors
     belongs_to :error, class_name: "SolidErrors::Error"
 
     after_create_commit :send_email, if: -> { SolidErrors.send_emails? && SolidErrors.email_to.present? }
+    after_create_commit -> { SolidErrors::Cleaner.go! }
 
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
     # have the base path for gem installs replaced by "[GEM_ROOT]", while those in the project
