@@ -20,16 +20,16 @@ module SolidErrors
 
       def destroy_occurrences
         SolidErrors::Occurrence.joins(:error)
-                                .merge(SolidErrors::Error.resolved)
-                                .where(created_at: ...SolidErrors.destroy_after.ago)
-                                .delete_all
+          .merge(SolidErrors::Error.resolved)
+          .where(created_at: ...SolidErrors.destroy_after.ago)
+          .delete_all
       end
 
       def destroy_errors
         SolidErrors::Error.resolved
-                          .where
-                          .missing(:occurrences)
-                          .delete_all
+          .where
+          .missing(:occurrences)
+          .delete_all
       end
     end
   end
