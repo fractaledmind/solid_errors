@@ -98,6 +98,12 @@ end
 
 All exceptions are recorded automatically. No additional code required.
 
+You can add default additional information to the context of the error by adding this line to your application controller:
+```ruby
+before_action { Rails.error.set_context(request_url: request.original_url, params: params, session: session.inspect) }
+```
+The additional context information will be automatically displayed on the occurence details page.
+
 Please consult the [official guides](https://guides.rubyonrails.org/error_reporting.html) for an introduction to the error reporting API.
 
 There are intentionally few features; you can view and resolve errors. That’s it. The goal is to provide a simple, lightweight, and performant solution for tracking exceptions in your Rails application. If you need more features, you should probably use a 3rd party service like [Honeybadger](https://www.honeybadger.io/), whose MIT-licensed [Ruby agent gem](https://github.com/honeybadger-io/honeybadger-ruby) provided a couple of critical pieces of code for this project.
