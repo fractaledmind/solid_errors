@@ -161,7 +161,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
-* `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the duration specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
+* `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
 
 ### Database Configuration
 
