@@ -9,4 +9,4 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/mi
 require "rails/test_help"
 require "solid_errors"
 
-require "minitest/autorun"
+require "mocha/minitest"
