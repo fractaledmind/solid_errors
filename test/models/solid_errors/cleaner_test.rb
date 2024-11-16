@@ -7,12 +7,12 @@ class SolidErrors::CleanerTest < ActiveSupport::TestCase
 
   test "not destroy if destroy_after is not set" do
     simulate_99_old_exceptions(:resolved)
-    previous_error = SolidErrors::Error.last
-    previous_occurrence = SolidErrors::Occurrence.last
-    Rails.error.report(dummy_exception)
 
-    assert SolidErrors::Error.exists?(id: previous_error.id)
-    assert SolidErrors::Occurrence.exists?(id: previous_occurrence.id)
+    assert_difference -> { SolidErrors::Error.count }, +1 do
+      assert_difference -> { SolidErrors::Occurrence.count }, +1 do
+        Rails.error.report(dummy_exception)
+      end
+    end
   end
 
   test "destroy old occurrences every 100 insertions if destroy_after is set" do
@@ -30,6 +30,7 @@ class SolidErrors::CleanerTest < ActiveSupport::TestCase
 
     assert_difference -> { SolidErrors::Error.count }, +1 do
       assert_difference -> { SolidErrors::Occurrence.count }, +1 do
+        assert_empty SolidErrors::Error.resolved
         Rails.error.report(dummy_exception)
       end
     end
