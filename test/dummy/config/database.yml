@@ -9,42 +9,15 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
-primary: &primary
-  <<: *default
-  database: storage/<%= ENV.fetch("RAILS_ENV", "development") %>.sqlite3
-
-queue: &queue
-  <<: *default
-  migrations_paths: db/queue_migrate
-  database: storage/queue.sqlite3
-
-errors: &errors
-  <<: *default
-  migrations_paths: db/errors_migrate
-  database: storage/errors.sqlite3
-
 development:
   primary:
-    <<: *primary
-    database: storage/<%= `git branch --show-current`.chomp || 'development' %>.sqlite3
-  queue: *queue
-  errors: *errors
+    <<: *default
+    database: db/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   primary:
-    <<: *primary
+    <<: *default
     database: db/test.sqlite3
-  queue:
-    <<: *queue
-    database: db/queue.sqlite3
-  errors:
-    <<: *errors
-    database: db/errors.sqlite3
-
-production:
-  primary: *primary
-  queue: *queue
-  errors: *errors
