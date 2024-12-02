@@ -1,25 +1,25 @@
 module SolidErrors
   class Subscriber
     IGNORED_ERRORS = ["ActionController::RoutingError",
-      "AbstractController::ActionNotFound",
-      "ActionController::MethodNotAllowed",
-      "ActionController::UnknownHttpMethod",
-      "ActionController::NotImplemented",
-      "ActionController::UnknownFormat",
-      "ActionController::InvalidAuthenticityToken",
-      "ActionController::InvalidCrossOriginRequest",
-      "ActionDispatch::Http::Parameters::ParseError",
-      "ActionController::BadRequest",
-      "ActionController::ParameterMissing",
-      "ActiveRecord::RecordNotFound",
-      "ActionController::UnknownAction",
-      "ActionDispatch::Http::MimeNegotiation::InvalidType",
-      "Rack::QueryParser::ParameterTypeError",
-      "Rack::QueryParser::InvalidParameterError",
-      "CGI::Session::CookieStore::TamperedWithCookie",
-      "Mongoid::Errors::DocumentNotFound",
-      "Sinatra::NotFound",
-      "Sidekiq::JobRetry::Skip"].map(&:freeze).freeze
+                      "AbstractController::ActionNotFound",
+                      "ActionController::MethodNotAllowed",
+                      "ActionController::UnknownHttpMethod",
+                      "ActionController::NotImplemented",
+                      "ActionController::UnknownFormat",
+                      "ActionController::InvalidAuthenticityToken",
+                      "ActionController::InvalidCrossOriginRequest",
+                      "ActionDispatch::Http::Parameters::ParseError",
+                      "ActionController::BadRequest",
+                      "ActionController::ParameterMissing",
+                      "ActiveRecord::RecordNotFound",
+                      "ActionController::UnknownAction",
+                      "ActionDispatch::Http::MimeNegotiation::InvalidType",
+                      "Rack::QueryParser::ParameterTypeError",
+                      "Rack::QueryParser::InvalidParameterError",
+                      "CGI::Session::CookieStore::TamperedWithCookie",
+                      "Mongoid::Errors::DocumentNotFound",
+                      "Sinatra::NotFound",
+                      "Sidekiq::JobRetry::Skip"].map(&:freeze).freeze
 
     def report(error, handled:, severity:, context:, source: nil)
       return if ignore_by_class?(error.class.name)
@@ -37,9 +37,13 @@ module SolidErrors
         record = SolidErrors::Error.create!(error_attributes.merge(fingerprint: fingerprint))
       end
 
+      backtrace_cleaner = ActiveSupport::BacktraceCleaner.new
+      backtrace_cleaner.add_silencer { |line| /puma|rubygems|gems/.match?(line) }
+      backtrace = SolidErrors.full_backtrace? ? backtrace_cleaner.clean(error.backtrace) : error.backtrace
+
       SolidErrors::Occurrence.create(
         error_id: record.id,
-        backtrace: error.backtrace.join("\n"),
+        backtrace: backtrace.join("\n"),
         context: s(context)
       )
     end

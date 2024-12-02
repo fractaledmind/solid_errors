@@ -7,6 +7,7 @@ require_relative "solid_errors/engine"
 
 module SolidErrors
   mattr_accessor :connects_to
+  mattr_accessor :full_backtrace
   mattr_writer :username
   mattr_writer :password
   mattr_writer :send_emails
@@ -15,6 +16,12 @@ module SolidErrors
   mattr_writer :email_subject_prefix
 
   class << self
+    # use method instead of attr_accessor to ensure
+    # this works if variable set after SolidErrors is loaded
+    def full_backtrace?
+      @full_backtrace ||= ENV["SOLIDERRORS_FULL_BACKTRACE"] || @@full_backtrace || false
+    end
+
     # use method instead of attr_accessor to ensure
     # this works if variable set after SolidErrors is loaded
     def username

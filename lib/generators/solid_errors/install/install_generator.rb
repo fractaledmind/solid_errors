@@ -21,6 +21,7 @@ module SolidErrors
           '\1config.solid_errors.send_emails = true',
           '\1config.solid_errors.email_from = ""',
           '\1config.solid_errors.email_to = ""',
+          '\1config.solid_errors.full_backtrace = false',
           '\1config.solid_errors.username = Rails.application.credentials.dig(:solid_errors, :username)',
           '\1config.solid_errors.password = Rails.application.credentials.dig(:solid_errors, :password)'
         ].join("\n")
