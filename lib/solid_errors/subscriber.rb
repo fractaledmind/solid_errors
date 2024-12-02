@@ -39,7 +39,7 @@ module SolidErrors
 
       backtrace_cleaner = ActiveSupport::BacktraceCleaner.new
       backtrace_cleaner.add_silencer { |line| /puma|rubygems|gems/.match?(line) }
-      backtrace = SolidErrors.full_backtrace? ? backtrace_cleaner.clean(error.backtrace) : error.backtrace
+      backtrace = SolidErrors.full_backtrace? ? error.backtrace : backtrace_cleaner.clean(error.backtrace)
 
       SolidErrors::Occurrence.create(
         error_id: record.id,
