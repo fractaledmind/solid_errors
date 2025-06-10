@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   end
 
   ">= 7.0".tap do |rails_version|
-    spec.add_dependency "actionmailer", rails_version
     spec.add_dependency "actionpack", rails_version
     spec.add_dependency "actionview", rails_version
     spec.add_dependency "activerecord", rails_version
