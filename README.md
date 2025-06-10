@@ -167,6 +167,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
+* `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 
 ### Database Configuration
 
@@ -221,6 +222,13 @@ If you use Devise for authentication in your app, you can also restrict access t
 authenticate :user, -> (user) { user.admin? } do
   mount SolidErrors::Engine, at: "/solid_errors"
 end
+```
+
+You can also specify a different controller to use as the Solid Errors controller base class:
+
+```ruby
+# Override the base controller class with your own controller
+config.solid_errors.base_controller_class = "YourAdminController"
 ```
 
 #### Email notifications
