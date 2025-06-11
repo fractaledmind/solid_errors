@@ -1,37 +1,40 @@
 require "test_helper"
 
-class SolidErrors::CleanerTest < ActiveSupport::TestCase
-  setup do
-    assert_nil SolidErrors.destroy_after
+class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
+  def teardown
+    SolidErrors.destroy_after = nil
   end
 
-  test "not destroy if destroy_after is not set" do
+  test "do not destroy if destroy_after is not set" do
+    SolidErrors.destroy_after = nil
     simulate_99_old_exceptions(:resolved)
 
     assert_difference -> { SolidErrors::Error.count }, +1 do
       assert_difference -> { SolidErrors::Occurrence.count }, +1 do
-        Rails.error.report(dummy_exception)
+        Rails.error.report(StandardError.new("oof"))
       end
     end
   end
 
   test "destroy old occurrences every 100 insertions if destroy_after is set" do
-    set_destroy_after
+    SolidErrors.destroy_after = 1.day
     simulate_99_old_exceptions(:resolved)
-    Rails.error.report(dummy_exception)
 
-    assert_equal 1, SolidErrors::Error.count
-    assert_equal 1, SolidErrors::Occurrence.count
+    assert_difference -> { SolidErrors::Error.count }, 0 do
+      assert_difference -> { SolidErrors::Occurrence.count }, 0 do
+        Rails.error.report(StandardError.new("oof"))
+      end
+    end
   end
 
   test "not destroy if errors are unresolved" do
-    set_destroy_after
+    SolidErrors.destroy_after = 1.day
     simulate_99_old_exceptions(:unresolved)
 
     assert_difference -> { SolidErrors::Error.count }, +1 do
       assert_difference -> { SolidErrors::Occurrence.count }, +1 do
         assert_empty SolidErrors::Error.resolved
-        Rails.error.report(dummy_exception)
+        Rails.error.report(StandardError.new("oof"))
       end
     end
   end
@@ -39,18 +42,8 @@ class SolidErrors::CleanerTest < ActiveSupport::TestCase
   private
 
   def simulate_99_old_exceptions(status)
-    Rails.error.report(dummy_exception("argh"))
+    Rails.error.report(StandardError.new("argh"))
     SolidErrors::Error.update_all(resolved_at: Time.current) if status == :resolved
     SolidErrors::Occurrence.last.update!(id: 99, created_at: 1.day.ago)
-  end
-
-  def set_destroy_after
-    SolidErrors.stubs(destroy_after: 1.day)
-  end
-
-  def dummy_exception(message = "oof")
-    exception = StandardError.new(message)
-    exception.set_backtrace(caller)
-    exception
   end
 end
