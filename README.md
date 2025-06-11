@@ -98,6 +98,12 @@ end
 
 All exceptions are recorded automatically. No additional code required.
 
+You can add default additional information to the context of the error by adding this line to your application controller:
+```ruby
+before_action { Rails.error.set_context(request_url: request.original_url, params: params, session: session.inspect) }
+```
+The additional context information will be automatically displayed on the occurence details page.
+
 Please consult the [official guides](https://guides.rubyonrails.org/error_reporting.html) for an introduction to the error reporting API.
 
 There are intentionally few features; you can view and resolve errors. That’s it. The goal is to provide a simple, lightweight, and performant solution for tracking exceptions in your Rails application. If you need more features, you should probably use a 3rd party service like [Honeybadger](https://www.honeybadger.io/), whose MIT-licensed [Ruby agent gem](https://github.com/honeybadger-io/honeybadger-ruby) provided a couple of critical pieces of code for this project.
@@ -161,6 +167,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
+* `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
 
 ### Database Configuration
@@ -216,6 +223,13 @@ If you use Devise for authentication in your app, you can also restrict access t
 authenticate :user, -> (user) { user.admin? } do
   mount SolidErrors::Engine, at: "/solid_errors"
 end
+```
+
+You can also specify a different controller to use as the Solid Errors controller base class:
+
+```ruby
+# Override the base controller class with your own controller
+config.solid_errors.base_controller_class = "YourAdminController"
 ```
 
 #### Email notifications

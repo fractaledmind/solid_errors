@@ -7,6 +7,7 @@ require_relative "solid_errors/engine"
 
 module SolidErrors
   mattr_accessor :connects_to
+  mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
   mattr_writer :password
   mattr_writer :send_emails
@@ -22,8 +23,6 @@ module SolidErrors
       @username ||= ENV["SOLIDERRORS_USERNAME"] || @@username
     end
 
-    # use method instead of attr_accessor to ensure
-    # this works if variable set after SolidErrors is loaded
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
     end
