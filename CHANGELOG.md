@@ -8,6 +8,8 @@
 - Update documentation to show how to add additional information to the context ([@francescob](https://github.com/fractaledmind/solid_errors/pull/71))
 - Introduce base_controller_class config option ([@ron-shinall](https://github.com/fractaledmind/solid_errors/pull/67))
 - Introducing destroy_after config property to clear resolved errors ([@ron-shinall](https://github.com/fractaledmind/solid_errors/pull/79))
+- configuration for a subject prefix for email ([@francescob](https://github.com/fractaledmind/solid_errors/pull/66))
+- fix some small typos ([@defkode](https://github.com/fractaledmind/solid_errors/pull/64))
 
 ## [0.6.1] - 2024-09-19
 
