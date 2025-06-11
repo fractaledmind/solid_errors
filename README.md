@@ -168,6 +168,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
+* `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
 
 ### Database Configuration
 
@@ -255,6 +256,20 @@ config.solid_errors.email_subject_prefix = "[#{Rails.application.name}][#{Rails.
 ```
 
 If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
+
+#### Automatically destroying old records
+
+Setting `destroy_after` to a duration will allow Solid Errors to be self-maintaining by peridically destroying **resolved** records that are older than that value. The value provided must respond to `.ago`.
+
+```ruby
+# Automatically destroy records older than 30 days
+config.solid_errors.destroy_after = 30.days
+```
+
+```ruby
+# Automatically destroy records older than 6 months
+config.solid_errors.destroy_after = 6.months
+```
 
 ### Examples
 
@@ -351,7 +366,7 @@ You can always take control of the views by creating your own views and/or parti
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. If you want to set up a local development database, run `rake db:migrate`.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 

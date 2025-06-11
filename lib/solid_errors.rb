@@ -10,36 +10,27 @@ module SolidErrors
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
   mattr_writer :password
-  mattr_writer :send_emails
-  mattr_writer :email_from
-  mattr_writer :email_to
-  mattr_writer :email_subject_prefix
+  mattr_accessor :send_emails, default: false
+  mattr_accessor :email_from, default: "solid_errors@noreply.com"
+  mattr_accessor :email_to
+  mattr_accessor :email_subject_prefix
+  mattr_accessor :destroy_after
 
   class << self
     # use method instead of attr_accessor to ensure
-    # this works if variable set after SolidErrors is loaded
+    # this works if ENV variable set after SolidErrors is loaded
     def username
       @username ||= ENV["SOLIDERRORS_USERNAME"] || @@username
     end
 
+    # use method instead of attr_accessor to ensure
+    # this works if ENV variable set after SolidErrors is loaded
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
     end
 
     def send_emails?
-      @send_emails ||= ENV["SOLIDERRORS_SEND_EMAILS"] || @@send_emails || false
-    end
-
-    def email_from
-      @email_from ||= ENV["SOLIDERRORS_EMAIL_FROM"] || @@email_from || "solid_errors@noreply.com"
-    end
-
-    def email_to
-      @email_to ||= ENV["SOLIDERRORS_EMAIL_TO"] || @@email_to
-    end
-
-    def email_subject_prefix
-      @email_subject_prefix ||= ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"] || @@email_subject_prefix
+      send_emails && email_to.present?
     end
   end
 end
