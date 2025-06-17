@@ -8,4 +8,5 @@
 /tmp/
 .DS_Store
 test/dummy/log/*.log
+test/dummy/db/*.sqlite3
 .idea
