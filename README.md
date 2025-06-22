@@ -75,7 +75,7 @@ production:
 ```
 
 > [!NOTE]
-> Calling `bin/rails solid_errors:install` will automatically add `config.solid_errors.connects_to = { database: { writing: :errors } }` to `config/environments/production.rb`, so no additional configuration is needed there (although you must make sure that you use the `errors` name in `database.yml` for this to match!). But if you want to use Solid Errors in a different environment (like staging or even development), you'll have to manually add that `config.solid_errors.connects_to` line to the respective environment file. And, as always, make sure that the name you're using for the database in `config/database.yml` matches the name you use in `config.solid_errors.connects_to`.
+> Calling `bin/rails generate solid_errors:install` will automatically add `config.solid_errors.connects_to = { database: { writing: :errors } }` to `config/environments/production.rb`, so no additional configuration is needed there (although you must make sure that you use the `errors` name in `database.yml` for this to match!). But if you want to use Solid Errors in a different environment (like staging or even development), you'll have to manually add that `config.solid_errors.connects_to` line to the respective environment file. And, as always, make sure that the name you're using for the database in `config/database.yml` matches the name you use in `config.solid_errors.connects_to`.
 
 Then run `db:prepare` in production to ensure the database is created and the schema is loaded.
 
