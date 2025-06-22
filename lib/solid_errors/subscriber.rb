@@ -43,7 +43,7 @@ module SolidErrors
 
       SolidErrors::Occurrence.create(
         error_id: record.id,
-        backtrace: error.backtrace&.join("\n"),
+        backtrace: backtrace&.join("\n"),
         context: s(context)
       )
     end
