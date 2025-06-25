@@ -9,7 +9,12 @@ module SolidErrors
     source_root File.expand_path("templates", __dir__)
 
     def add_solid_errors_db_schema
-      template "db/errors_schema.rb"
+      template_name =
+        case ActiveRecord.schema_format
+        when :sql then "db/errors_structure.sql"
+        else "db/errors_schema.rb"
+        end
+      template template_name
     end
 
     def configure_solid_errors
