@@ -23,7 +23,7 @@ module SolidErrors
 
     def send_email
       ErrorMailer.error_occurred(self).deliver_later
-      self.update_column(:resolved_at, nil)
+      error.update_column(:resolved_at, nil)
     end
 
     def clear_resolved_errors
