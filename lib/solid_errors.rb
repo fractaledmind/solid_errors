@@ -7,6 +7,7 @@ require_relative "solid_errors/engine"
 
 module SolidErrors
   mattr_accessor :connects_to
+  mattr_accessor :full_backtrace
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
   mattr_writer :password
@@ -18,6 +19,13 @@ module SolidErrors
 
   class << self
     # use method instead of attr_accessor to ensure
+    # this works if variable set after SolidErrors is loaded
+    def full_backtrace?
+      @full_backtrace ||= ENV["SOLIDERRORS_FULL_BACKTRACE"] || @@full_backtrace || false
+    end
+
+    # use method instead of attr_accessor to ensure
+    # this works if variable set after SolidErrors is loaded
     # this works if ENV variable set after SolidErrors is loaded
     def username
       @username ||= ENV["SOLIDERRORS_USERNAME"] || @@username
