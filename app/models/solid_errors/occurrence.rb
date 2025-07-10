@@ -2,7 +2,7 @@ module SolidErrors
   class Occurrence < Record
     belongs_to :error, class_name: "SolidErrors::Error"
 
-    after_create_commit :send_email, if: -> { SolidErrors.send_emails? && SolidErrors.email_to.present? }
+    after_create_commit :send_email, if: :should_send_email?
     after_create_commit :clear_resolved_errors, if: :should_clear_resolved_errors?
 
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
@@ -23,6 +23,7 @@ module SolidErrors
 
     def send_email
       ErrorMailer.error_occurred(self).deliver_later
+      self.update_column(:resolved_at, nil)
     end
 
     def clear_resolved_errors
@@ -44,6 +45,10 @@ module SolidErrors
       return false unless (id % 100).zero?
 
       true
+    end
+
+    def should_send_email?
+      SolidErrors.send_emails? && SolidErrors.email_to.present? && error.occurrences.where.not(resolved_at: nil).any?
     end
   end
 end

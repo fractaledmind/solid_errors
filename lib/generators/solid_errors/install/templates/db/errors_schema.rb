@@ -7,7 +7,6 @@ ActiveRecord::Schema[7.1].define(version: 1) do
     t.text "severity", null: false
     t.text "source"
     t.datetime "resolved_at"
-    t.datetime "prev_resolved_at"
     t.string "fingerprint", limit: 64, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
