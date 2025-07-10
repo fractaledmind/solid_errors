@@ -48,7 +48,7 @@ module SolidErrors
     end
 
     def should_send_email?
-      SolidErrors.send_emails? && SolidErrors.email_to.present? && error.resolved_at.nil?
+      SolidErrors.send_emails? && SolidErrors.email_to.present? && !error.resolved?
     end
   end
 end
