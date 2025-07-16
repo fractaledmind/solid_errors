@@ -10,7 +10,7 @@
   <body class="h-full flex flex-col pb-4">
     <main class="grow container mx-auto mt-4">
       <% if defined?(main_app.root_path) %>
-        <%= link_to "< Back to main app", main_app.root_path, class: "text-sm text-blue-500 hover:underline decoration-blue-500" %>
+        <%= link_to "← Back to main app", main_app.root_path, class: "text-sm text-blue-500 hover:underline decoration-blue-500" %>
       <% end %>
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
