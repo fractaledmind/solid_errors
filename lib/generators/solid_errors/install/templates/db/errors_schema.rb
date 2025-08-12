@@ -7,11 +7,13 @@ ActiveRecord::Schema[7.1].define(version: 1) do
     t.text "severity", null: false
     t.text "source"
     t.datetime "resolved_at"
+    t.datetime "prev_resolved_at"
     t.string "fingerprint", limit: 64, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fingerprint"], name: "index_solid_errors_on_fingerprint", unique: true
     t.index ["resolved_at"], name: "index_solid_errors_on_resolved_at"
+    t.index ["prev_resolved_at"], name: "index_solid_errors_on_prev_resolved_at"
   end
 
   create_table "solid_errors_occurrences", force: :cascade do |t|
