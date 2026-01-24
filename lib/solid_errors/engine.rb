@@ -18,7 +18,7 @@ module SolidErrors
     end
 
     initializer "solid_errors.active_record.error_subscriber" do
-      Rails.error.subscribe(SolidErrors::Subscriber.new)
+      Rails.error.subscribe(SolidErrors::Subscriber.new) if SolidErrors.enabled
     end
   end
 end

@@ -6,6 +6,7 @@ require_relative "solid_errors/subscriber"
 require_relative "solid_errors/engine"
 
 module SolidErrors
+  mattr_accessor :enabled, default: true
   mattr_accessor :connects_to
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
