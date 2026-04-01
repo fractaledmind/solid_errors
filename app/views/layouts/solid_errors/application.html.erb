@@ -51,6 +51,21 @@
       document.querySelectorAll('[data-controller="fade"]').forEach(element => {
         fadeOut(element);
       });
+
+      var copyBtn = document.getElementById('copy-markdown');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+          var text = document.getElementById('error-markdown').content.textContent;
+          var span = copyBtn.querySelector('span');
+          var originalText = span.textContent;
+          navigator.clipboard.writeText(text).then(function() {
+            span.textContent = 'Copied!';
+            setTimeout(function() { span.textContent = originalText; }, 2000);
+          }).catch(function(err) {
+            alert('Failed to copy: ' + err);
+          });
+        });
+      }
     </script>
   </body>
 </html>
