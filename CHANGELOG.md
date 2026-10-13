@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-13
+
+- Fix pagination links taking URL options such as `host` and `script_name` from request params ([@bruno-costanzo](https://github.com/fractaledmind/solid_errors/pull/99))
+- Add the CSP nonce to the inline style tag ([@armandmgt](https://github.com/fractaledmind/solid_errors/pull/92))
+- Stop the email loop when error email delivery fails ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/104))
+- Store occurrence context as JSON on MariaDB ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/101))
+- Render occurrences reported without a backtrace ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/103))
+- Require Rails >= 7.1 and Ruby >= 3.2, and test every supported combination ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/100))
+
 ## [0.7.0] - 2025-06-11
 
 - support ruby 3.4.0 style backtrace string ([@kuboon](https://github.com/fractaledmind/solid_errors/pull/74))

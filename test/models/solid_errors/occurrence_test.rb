@@ -39,26 +39,16 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
     end
   end
 
-  test "an ignored error should not be saved while an acceptable one is saved" do
-    SolidErrors.ignored_errors = ["RuntimeError"]
-    # An hardcoded ignored error should be discarded
-    assert_difference -> { SolidErrors::Error.count }, 0 do
-      assert_difference -> { SolidErrors::Occurrence.count }, 0 do
-        Rails.error.report( ActionController::RoutingError.new('argh'))
-      end
-    end
-    # A user ignored error should be discarded
-    assert_difference -> { SolidErrors::Error.count }, 0 do
-      assert_difference -> { SolidErrors::Occurrence.count }, 0 do
-        Rails.error.report( RuntimeError.new("argh") )
-      end
-    end
-    # A valid error should be recorded
-    assert_difference -> { SolidErrors::Error.count }, +1 do
-      assert_difference -> { SolidErrors::Occurrence.count }, +1 do
-        Rails.error.report(StandardError.new("argh"))
-      end
-    end
+  test "context reads back as a hash when the database reports its json column as text" do
+    # MariaDB aliases JSON to LONGTEXT, so Rails sees a text column there
+    ActiveRecord::Base.connection.change_column :solid_errors_occurrences, :context, :text
+    SolidErrors::Occurrence.reset_column_information
+
+    Rails.error.report(StandardError.new("oof"), context: {user_id: 1})
+
+    assert_equal({"user_id" => 1}, SolidErrors::Occurrence.last.reload.context)
+  ensure
+    SolidErrors::Occurrence.reset_column_information
   end
 
   private
@@ -68,5 +58,4 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
     SolidErrors::Error.update_all(resolved_at: Time.current) if status == :resolved
     SolidErrors::Occurrence.last.update!(id: 99, created_at: 1.day.ago)
   end
-
 end

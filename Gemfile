@@ -11,4 +11,4 @@ gem "minitest", "~> 5.0"
 
 gem "standard", "~> 1.3"
 
-gem "actionmailer", ">= 7.0"
+gem "actionmailer", ">= 7.1"

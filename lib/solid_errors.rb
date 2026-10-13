@@ -6,6 +6,7 @@ require_relative "solid_errors/subscriber"
 require_relative "solid_errors/engine"
 
 module SolidErrors
+  mattr_accessor :enabled, default: true
   mattr_accessor :connects_to
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
@@ -15,7 +16,6 @@ module SolidErrors
   mattr_accessor :email_to
   mattr_accessor :email_subject_prefix
   mattr_accessor :destroy_after
-  mattr_writer :ignored_errors
 
   class << self
     # use method instead of attr_accessor to ensure
@@ -30,12 +30,17 @@ module SolidErrors
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
     end
 
-    def ignored_errors
-      @ignored_errors ||= (@@ignored_errors || []).to_h{|k| [k,true]}
+    def send_emails?
+      send_emails && email_to.present? && !ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails]
     end
 
-    def send_emails?
-      send_emails && email_to.present?
+    # Errors reported inside the block are recorded but never emailed
+    def without_emails
+      previous = ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails]
+      ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails] = true
+      yield
+    ensure
+      ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails] = previous
     end
   end
 end

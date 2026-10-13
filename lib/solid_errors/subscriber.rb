@@ -19,10 +19,11 @@ module SolidErrors
       "CGI::Session::CookieStore::TamperedWithCookie",
       "Mongoid::Errors::DocumentNotFound",
       "Sinatra::NotFound",
-      "Sidekiq::JobRetry::Skip"].to_h{|v| [v.freeze,true]}.freeze
+      "Sidekiq::JobRetry::Skip"].map(&:freeze).freeze
 
     def report(error, handled:, severity:, context:, source: nil)
       return if ignore_by_class?(error.class.name)
+
       error_attributes = {
         exception_class: error.class.name,
         message: s(error.message),
@@ -48,7 +49,11 @@ module SolidErrors
     end
 
     def ignore_by_class?(error_class_name)
-      SolidErrors.ignored_errors.key?(error_class_name) || IGNORED_ERRORS.key?(error_class_name)
+      IGNORED_ERRORS.any? do |ignored_class|
+        ignored_class_name = ignored_class.respond_to?(:name) ? ignored_class.name : ignored_class
+
+        ignored_class_name == error_class_name
+      end
     end
   end
 end

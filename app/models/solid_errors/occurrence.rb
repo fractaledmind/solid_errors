@@ -2,12 +2,11 @@ module SolidErrors
   class Occurrence < Record
     belongs_to :error, class_name: "SolidErrors::Error"
 
+    # Adapters that report the json column as text (MariaDB) would otherwise store Hash#inspect
+    attribute :context, :json
+
     after_create_commit :send_email, if: -> { SolidErrors.send_emails? && SolidErrors.email_to.present? }
     after_create_commit :clear_resolved_errors, if: :should_clear_resolved_errors?
-
-    unless type_for_attribute("context").is_a?(ActiveRecord::Type::Json)
-      serialize :context, coder: JSON
-    end
 
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
     # have the base path for gem installs replaced by "[GEM_ROOT]", while those in the project
@@ -16,7 +15,7 @@ module SolidErrors
     def parsed_backtrace
       return @parsed_backtrace if defined? @parsed_backtrace
 
-      @parsed_backtrace = parse_backtrace(backtrace.split("\n"))
+      @parsed_backtrace = parse_backtrace(backtrace&.split("\n"))
     end
 
     private
