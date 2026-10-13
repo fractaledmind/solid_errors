@@ -153,8 +153,9 @@ end
 
 ### Configuration
 
-You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, 6 configuration options are available:
+You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, the following configuration options are available:
 
+* `enabled` - Enable or disable error tracking. Defaults to `true`. See [Disabling error tracking](#disabling-error-tracking) for more information.
 * `connects_to` - The database configuration to use for the Solid Errors database. See [Database Configuration](#database-configuration) for more information.
 * `username` - The username to use for HTTP authentication. See [Authentication](#authentication) for more information.
 * `password` - The password to use for HTTP authentication. See [Authentication](#authentication) for more information.
@@ -190,6 +191,17 @@ Running Solid Errors in a separate database is recommended, but it's also possib
 3. Migrate your database.
 
 You won't have multiple databases, so `database.yml` doesn't need to have the errors database configuration.
+
+#### Disabling error tracking
+
+Solid Errors is enabled by default. If you want to disable error tracking in a specific environment, you can set `enabled` to `false`:
+
+```ruby
+# config/environments/development.rb
+config.solid_errors.enabled = false
+```
+
+When disabled, Solid Errors will not subscribe to the Rails error reporter and no errors will be recorded.
 
 #### Authentication
 
