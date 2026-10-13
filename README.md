@@ -165,7 +165,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
-* `ignored_errors` - An array of error class names (strings) that will not be saved in addition to the default list hardcoded in `lib/solid_errors/subscriber.rb`
+* `ignored_errors` - Error classes, or their names, to never record, in addition to the built-in list in `SolidErrors::Subscriber::IGNORED_ERRORS`. For example, `config.solid_errors.ignored_errors = ["ActiveStorage::FileNotFoundError"]`.
 
 ### Database Configuration
 

@@ -49,7 +49,7 @@ module SolidErrors
     end
 
     def ignore_by_class?(error_class_name)
-      IGNORED_ERRORS.any? do |ignored_class|
+      [*IGNORED_ERRORS, *SolidErrors.ignored_errors].any? do |ignored_class|
         ignored_class_name = ignored_class.respond_to?(:name) ? ignored_class.name : ignored_class
 
         ignored_class_name == error_class_name
