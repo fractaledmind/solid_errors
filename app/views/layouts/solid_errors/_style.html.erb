@@ -1,4 +1,4 @@
-<style nonce="<%= content_security_policy_nonce %>">
+<style<% if local_assigns[:nonce] %> nonce="<%= nonce %>"<% end %>>
   /*
   ! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
   */
