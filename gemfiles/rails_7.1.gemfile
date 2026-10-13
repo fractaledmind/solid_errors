@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+eval_gemfile "../Gemfile"
+
+gem "rails", "~> 7.1.0"
+# json 3.1 dropped the quirks_mode option this Rails line's JSON encoder passes
+gem "json", "< 3"
