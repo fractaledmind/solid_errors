@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Require Rails >= 7.1 and Ruby >= 3.2; test against Rails 7.1, 7.2, 8.0 and 8.1 on Ruby 3.2 through 4.0
+
 ## [0.7.0] - 2025-06-11
 
 - support ruby 3.4.0 style backtrace string ([@kuboon](https://github.com/fractaledmind/solid_errors/pull/74))
