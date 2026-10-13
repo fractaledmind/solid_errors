@@ -84,12 +84,13 @@
             }
           });
 
-          // Save preference
-          sessionStorage.setItem(STORAGE_KEY, filter);
+          // Remember the choice; storage can be unavailable (private browsing)
+          try { sessionStorage.setItem(STORAGE_KEY, filter); } catch (e) {}
         }
 
         // Initialize on page load
-        const savedFilter = sessionStorage.getItem(STORAGE_KEY) || 'application';
+        let savedFilter = 'application';
+        try { savedFilter = sessionStorage.getItem(STORAGE_KEY) || savedFilter; } catch (e) {}
 
         // Apply saved filter to all occurrences
         if (savedFilter === 'full') {
