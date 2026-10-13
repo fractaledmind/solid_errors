@@ -17,7 +17,7 @@ module SolidErrors
   mattr_accessor :email_subject_prefix
   mattr_accessor :email_every_occurrence, default: true
   # Builds the error email's subject, before email_subject_prefix. reason is :created or :reopened when
-  # the occurrence opened its error, and nil for any other occurrence
+  # the occurrence opened its error, nil for any other occurrence, or the app's own reason when it sends the email itself
   mattr_accessor :email_subject, default: ->(error:, occurrence:, reason:) {
     subject = "#{error.severity_emoji} #{error.exception_class}"
     (reason == :reopened) ? "#{subject} (reopened)" : subject

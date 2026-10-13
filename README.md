@@ -306,11 +306,22 @@ config.solid_errors.email_subject = ->(error:, occurrence:, reason:) {
   count = error.occurrences.where(id: ..occurrence.id).count
   subject = "#{error.severity_emoji} #{error.exception_class}"
 
-  if reason == :reopened then "🔄 REOPENED: #{subject}"
-  elsif count.in?([10, 100, 1_000]) then "#{subject} (#{count.ordinalize} occurrence)"
-  else subject
+  case reason
+  when :reopened then "🔄 REOPENED: #{subject}"
+  when :resolved then "✅ RESOLVED: #{error.exception_class}"
+  else count.in?([10, 100, 1_000]) ? "#{subject} (#{count.ordinalize} occurrence)" : subject
   end
 }
+```
+
+The error email can also be sent for events of your own, such as an error being resolved or occurring unusually often. Whatever reason you pass reaches `email_subject`, as `:resolved` does in the example above:
+
+```ruby
+# config/initializers/solid_errors.rb
+ActiveSupport::Notifications.subscribe("error_resolved.solid_errors") do |event|
+  occurrence = event.payload[:error].occurrences.last
+  SolidErrors::ErrorMailer.error_occurred(occurrence, :resolved).deliver_later if occurrence && SolidErrors.send_emails?
+end
 ```
 
 #### Lifecycle events

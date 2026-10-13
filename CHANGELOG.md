@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-- Say in the error email subject when a resolved error was reopened, and add `email_subject` to build the subject yourself ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/109))
+- Say in the error email subject when a resolved error was reopened, and add `email_subject` to build the subject yourself, including for error emails an app sends for its own events ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/109))
 
 ## [0.8.0] - 2026-10-13
 

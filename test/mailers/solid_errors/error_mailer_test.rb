@@ -64,6 +64,17 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     SolidErrors.email_subject = DEFAULT_EMAIL_SUBJECT
   end
 
+  test "an app sending the email for its own event gets its reason in the subject proc" do
+    report_raised_error("oof")
+    SolidErrors.email_subject = ->(error:, occurrence:, reason:) { "#{error.exception_class} #{reason}" }
+
+    email = SolidErrors::ErrorMailer.error_occurred(SolidErrors::Occurrence.last, :resolved)
+
+    assert_equal "StandardError resolved", email.subject
+  ensure
+    SolidErrors.email_subject = DEFAULT_EMAIL_SUBJECT
+  end
+
   test "a reopened error is emailed as reopened" do
     with_emails do
       report_raised_error("oof")

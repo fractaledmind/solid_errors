@@ -13,7 +13,7 @@ module SolidErrors
     end
 
     # reason is passed on to SolidErrors.email_subject: :created or :reopened when the occurrence
-    # opened its error
+    # opened its error, or whatever an app sending this email for its own events passes
     def error_occurred(occurrence, reason = nil)
       unless defined?(ActionMailer::Base)
         raise "ActionMailer is not available. Make sure that you require \"action_mailer/railtie\" in application.rb"
