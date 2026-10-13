@@ -8,6 +8,8 @@ module SolidErrors
           Rails.error.report(exception, handled: true, source: "solid_errors.error_mailer")
         end
       end
+
+      helper_method :occurrence_url
     end
 
     def error_occurred(occurrence)
@@ -25,6 +27,15 @@ module SolidErrors
         from: SolidErrors.email_from,
         to: SolidErrors.email_to
       )
+    end
+
+    private
+
+    # Optional: an app without default_url_options[:host] still gets the email, just unlinked
+    def occurrence_url
+      public_send(SolidErrors.url_helper_name).error_url(@error, **SolidErrors.url_options, anchor: "occurrence_#{@occurrence.id}")
+    rescue ArgumentError, NoMethodError, ActionController::UrlGenerationError
+      nil
     end
   end
 end

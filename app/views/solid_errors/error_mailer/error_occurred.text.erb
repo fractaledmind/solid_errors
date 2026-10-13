@@ -1,10 +1,11 @@
-<% occurrence_url = public_send(SolidErrors.url_helper_name).error_url(@error, **SolidErrors.url_options.merge(anchor: "occurrence_#{@occurrence.id}")) %>
 <%= @error.severity_emoji %> <%= @error.exception_class %> from <%= @error.source %>
 ================================================================================
 
 <%= @error.message %>
 
-View in Solid Errors: <%= occurrence_url %>
+<% if (url = occurrence_url) %>
+View in Solid Errors: <%= url %>
+<% end %>
 
 DETAILS
 --------------------------------------------------------------------------------

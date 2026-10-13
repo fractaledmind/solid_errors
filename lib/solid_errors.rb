@@ -68,7 +68,7 @@ module SolidErrors
 
     def detect_url_options
       subdomain = find_solid_errors_route&.constraints&.dig(:subdomain)
-      subdomain.is_a?(String) ? { subdomain: subdomain } : {}
+      subdomain.is_a?(String) ? {subdomain: subdomain} : {}
     end
   end
 end
