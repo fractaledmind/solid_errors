@@ -272,6 +272,25 @@ To be emailed only when an error is new, or when a resolved error occurs again, 
 config.solid_errors.email_every_occurrence = false # defaults to true
 ```
 
+#### Lifecycle events
+
+Solid Errors publishes [Active Support notifications](https://guides.rubyonrails.org/active_support_instrumentation.html) once each change is committed, so you can send errors to Slack, a webhook or anywhere else:
+
+| Event | When | Payload |
+| --- | --- | --- |
+| `error_created.solid_errors` | An error is recorded for the first time | `:error`, `:occurrence` |
+| `error_reopened.solid_errors` | A resolved error occurs again | `:error`, `:occurrence` |
+| `error_resolved.solid_errors` | An error is marked as resolved | `:error` |
+| `occurrence_created.solid_errors` | Any occurrence is recorded, including those above | `:error`, `:occurrence` |
+
+```ruby
+# config/initializers/solid_errors.rb
+ActiveSupport::Notifications.subscribe(/\Aerror_(created|reopened)\.solid_errors\z/) do |event|
+  error = event.payload[:error]
+  SlackNotifier.post("#{error.exception_class}: #{error.message}")
+end
+```
+
 #### Automatically destroying old records
 
 Setting `destroy_after` to a duration will allow Solid Errors to be self-maintaining by peridically destroying **resolved** records that are older than that value. The value provided must respond to `.ago`.
