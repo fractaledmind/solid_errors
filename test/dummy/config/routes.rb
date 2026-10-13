@@ -8,5 +8,5 @@ Rails.application.routes.draw do
   mount SolidErrors::Engine, at: "/solid_errors"
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root to: "rails/health#show"
 end
