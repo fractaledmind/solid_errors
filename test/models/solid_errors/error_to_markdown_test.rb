@@ -26,14 +26,14 @@ class SolidErrors::ErrorToMarkdownTest < ActiveSupport::TestCase
   end
 
   test "includes source context for application lines" do
-    occurrence = @error.occurrences.order(created_at: :desc).first
-    backtrace = occurrence.parsed_backtrace
-
-    skip "No application lines in test backtrace" unless backtrace.application_lines.any?
+    routes = Rails.root.join("config/routes.rb")
+    line = File.readlines(routes).index { |code| code.include?("mount SolidErrors::Engine") } + 1
+    @error.occurrences.last.update!(backtrace: "#{routes}:#{line}:in 'block in <main>'")
 
     result = @error.to_markdown
+
     assert_includes result, "### Source Context"
-    assert_includes result, "```ruby"
+    assert_includes result, "#{line}:   mount SolidErrors::Engine"
   end
 
   test "includes request context when present" do
