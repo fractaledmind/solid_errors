@@ -12,13 +12,16 @@ module SolidErrors
       helper_method :occurrence_url
     end
 
-    def error_occurred(occurrence)
+    # opens_error is :reopened when this occurrence brought a resolved error back, so a fix that
+    # didn't hold reads differently from a brand-new error
+    def error_occurred(occurrence, opens_error = nil)
       unless defined?(ActionMailer::Base)
         raise "ActionMailer is not available. Make sure that you require \"action_mailer/railtie\" in application.rb"
       end
       @occurrence = occurrence
       @error = occurrence.error
       subject = "#{@error.severity_emoji} #{@error.exception_class}"
+      subject += " (reopened)" if opens_error&.to_sym == :reopened
       if SolidErrors.email_subject_prefix.present?
         subject = [SolidErrors.email_subject_prefix, subject].join(" ").squish!
       end

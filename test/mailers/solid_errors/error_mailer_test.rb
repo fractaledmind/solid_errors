@@ -36,6 +36,26 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     ActionMailer::Base.default_url_options = {}
   end
 
+  test "the subject says when an error was reopened" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+
+    assert_equal "⚠️ StandardError", SolidErrors::ErrorMailer.error_occurred(occurrence).subject
+    assert_equal "⚠️ StandardError (reopened)", SolidErrors::ErrorMailer.error_occurred(occurrence, :reopened).subject
+  end
+
+  test "a reopened error is emailed as reopened" do
+    with_emails do
+      report_raised_error("oof")
+      SolidErrors::Error.last.update!(resolved_at: Time.current)
+
+      assert_enqueued_email_with SolidErrors::ErrorMailer, :error_occurred,
+        args: ->(args) { args.last == :reopened } do
+        report_raised_error("oof")
+      end
+    end
+  end
+
   test "a failed delivery is recorded without sending another email" do
     with_failing_delivery do
       report_raised_error("oof")
@@ -62,15 +82,20 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     Rails.error.report(error)
   end
 
-  def with_failing_delivery
-    delivery_method = ActionMailer::Base.delivery_method
+  def with_emails
     SolidErrors.send_emails = true
     SolidErrors.email_to = "ops@example.com"
-    ActionMailer::Base.delivery_method = :failing
     yield
   ensure
     SolidErrors.send_emails = false
     SolidErrors.email_to = nil
+  end
+
+  def with_failing_delivery
+    delivery_method = ActionMailer::Base.delivery_method
+    ActionMailer::Base.delivery_method = :failing
+    with_emails { yield }
+  ensure
     ActionMailer::Base.delivery_method = delivery_method
   end
 end
