@@ -64,7 +64,8 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
 
     get solid_errors.error_path(@error)
 
-    assert_select "#backtrace-application-#{occurrence.id} summary", count: 1, text: /routes\.rb/
+    assert_select "#backtrace-application-#{occurrence.id} summary", count: 1
+    assert_select "#backtrace-application-#{occurrence.id} summary", text: /routes\.rb/
     assert_select "#backtrace-full-#{occurrence.id}[hidden] summary", count: 2
   end
 
