@@ -15,7 +15,7 @@ module SolidErrors
     def parsed_backtrace
       return @parsed_backtrace if defined? @parsed_backtrace
 
-      @parsed_backtrace = parse_backtrace(backtrace.split("\n"))
+      @parsed_backtrace = parse_backtrace(backtrace&.split("\n"))
     end
 
     private

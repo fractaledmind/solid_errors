@@ -46,6 +46,15 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
     inline_tags.each { |tag| assert_equal nonce, tag["nonce"], tag.to_html[0, 40] }
   end
 
+  test "an occurrence reported without a backtrace still renders" do
+    # Rails 7 reports exceptions that were never raised without a backtrace
+    @error.occurrences.update_all(backtrace: nil)
+
+    get solid_errors.error_path(@error)
+
+    assert_response :success
+  end
+
   private
 
   def report_errors(count)
