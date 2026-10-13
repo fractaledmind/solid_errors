@@ -55,6 +55,30 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "the application backtrace lists only application frames and the hidden full backtrace lists them all" do
+    occurrence = @error.occurrences.last
+    occurrence.update!(backtrace: [
+      "#{Gem.path.first}/gems/rack-3.0.0/lib/rack.rb:1:in 'call'",
+      "#{Rails.root.join("config/routes.rb")}:8:in 'block in <main>'"
+    ].join("\n"))
+
+    get solid_errors.error_path(@error)
+
+    assert_select "#backtrace-application-#{occurrence.id} summary", count: 1
+    assert_select "#backtrace-application-#{occurrence.id} summary", text: /routes\.rb/
+    assert_select "#backtrace-full-#{occurrence.id}[hidden] summary", count: 2
+  end
+
+  test "a backtrace without application frames offers the full trace" do
+    occurrence = @error.occurrences.last
+    occurrence.update!(backtrace: "#{Gem.path.first}/gems/rack-3.0.0/lib/rack.rb:1:in 'call'")
+
+    get solid_errors.error_path(@error)
+
+    assert_select "#backtrace-application-#{occurrence.id}", text: /No application code in backtrace/
+    assert_select "#backtrace-application-#{occurrence.id} button[data-backtrace-toggle=full]"
+  end
+
   test "the dashboard links back to the host app's root" do
     get solid_errors.errors_path
 
