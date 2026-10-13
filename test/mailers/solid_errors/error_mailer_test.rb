@@ -22,6 +22,16 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     assert_includes email.html_part.body.to_s, "oof"
   end
 
+  # The email styles itself inline. The dashboard's Tailwind build is tens of kilobytes
+  # it never uses, and Gmail clips a message past about a hundred.
+  test "the error email leaves out the dashboard stylesheet" do
+    report_raised_error("oof")
+
+    email = SolidErrors::ErrorMailer.error_occurred(SolidErrors::Occurrence.last)
+
+    refute_includes email.html_part.body.to_s, "tailwindcss"
+  end
+
   test "the error email links to the occurrence when the app has a mailer host" do
     report_raised_error("oof")
     occurrence = SolidErrors::Occurrence.last

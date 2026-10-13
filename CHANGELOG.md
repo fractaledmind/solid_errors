@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Leave the dashboard stylesheet out of the error email ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/110))
+
 ## [0.8.0] - 2026-10-13
 
 - Add `enabled` to turn off error tracking in an environment, such as test ([@kulturbande](https://github.com/fractaledmind/solid_errors/pull/96))
