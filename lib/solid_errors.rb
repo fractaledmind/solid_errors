@@ -30,7 +30,16 @@ module SolidErrors
     end
 
     def send_emails?
-      send_emails && email_to.present?
+      send_emails && email_to.present? && !ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails]
+    end
+
+    # Errors reported inside the block are recorded but never emailed
+    def without_emails
+      previous = ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails]
+      ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails] = true
+      yield
+    ensure
+      ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails] = previous
     end
   end
 end
