@@ -162,6 +162,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `sends_email` - Whether or not to send emails when an error occurs. See [Email notifications](#email-notifications) for more information.
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
+* `email_every_occurrence` - Whether to email every occurrence (the default), or only new errors and resolved errors that occur again. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
@@ -264,6 +265,12 @@ config.solid_errors.email_subject_prefix = "[#{Rails.application.name}][#{Rails.
 ```
 
 If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
+
+To be emailed only when an error is new, or when a resolved error occurs again, rather than for every occurrence:
+
+```ruby
+config.solid_errors.email_every_occurrence = false # defaults to true
+```
 
 #### Automatically destroying old records
 

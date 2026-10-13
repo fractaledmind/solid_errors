@@ -32,15 +32,18 @@ module SolidErrors
       }
       fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
       if (record = SolidErrors::Error.find_by(fingerprint: fingerprint))
+        opens_error = record.resolved?
         record.update!(resolved_at: nil, updated_at: Time.now)
       else
+        opens_error = true
         record = SolidErrors::Error.create!(error_attributes.merge(fingerprint: fingerprint))
       end
 
       SolidErrors::Occurrence.create(
         error_id: record.id,
         backtrace: error.backtrace&.join("\n"),
-        context: s(context)
+        context: s(context),
+        opens_error: opens_error
       )
     end
 
