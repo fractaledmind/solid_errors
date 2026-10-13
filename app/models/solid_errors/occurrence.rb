@@ -5,10 +5,11 @@ module SolidErrors
     # Adapters that report the json column as text (MariaDB) would otherwise store Hash#inspect
     attribute :context, :json
 
-    # Set by the subscriber when this occurrence creates its error or reopens a resolved one
+    # :created or :reopened, set by the subscriber when this occurrence opens its error
     attr_accessor :opens_error
 
     after_create_commit :send_email, if: -> { SolidErrors.send_emails? && (SolidErrors.email_every_occurrence || opens_error) }
+    after_create_commit :publish_events
     after_create_commit :clear_resolved_errors, if: :should_clear_resolved_errors?
 
     # The parsed exception backtrace. Lines in this backtrace that are from installed gems
@@ -25,6 +26,12 @@ module SolidErrors
 
     def parse_backtrace(backtrace)
       Backtrace.parse(backtrace)
+    end
+
+    def publish_events
+      payload = {error: error, occurrence: self}
+      ActiveSupport::Notifications.instrument("error_#{opens_error}.solid_errors", payload) if opens_error
+      ActiveSupport::Notifications.instrument("occurrence_created.solid_errors", payload)
     end
 
     def send_email
