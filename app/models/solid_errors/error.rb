@@ -30,6 +30,8 @@ module SolidErrors
     scope :resolved, -> { where.not(resolved_at: nil) }
     scope :unresolved, -> { where(resolved_at: nil) }
 
+    after_update_commit :publish_resolved, if: -> { saved_change_to_resolved_at? && resolved? }
+
     def severity_emoji
       SEVERITY_TO_EMOJI[severity.to_sym]
     end
@@ -52,6 +54,12 @@ module SolidErrors
 
     def resolved?
       resolved_at.present?
+    end
+
+    private
+
+    def publish_resolved
+      ActiveSupport::Notifications.instrument("error_resolved.solid_errors", error: self)
     end
   end
 end

@@ -5,7 +5,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= render "layouts/solid_errors/style" %>
+    <%= render "layouts/solid_errors/style", nonce: content_security_policy_nonce %>
   </head>
   <body class="h-full flex flex-col pb-4">
     <main class="grow container mx-auto mt-4">
