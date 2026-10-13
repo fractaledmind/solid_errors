@@ -1,0 +1,32 @@
+<%= @error.severity_emoji %> <%= @error.exception_class %> from <%= @error.source %>
+================================================================================
+
+<%= @error.message %>
+
+<% if (url = occurrence_url) %>
+View in Solid Errors: <%= url %>
+<% end %>
+
+DETAILS
+--------------------------------------------------------------------------------
+Severity:     <%= @error.severity_emoji %> <%= @error.severity %>
+Status:       <%= @error.status_emoji %> <%= @error.status %>
+Occurred at:  <%= @occurrence.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %>
+
+<% if @occurrence.context&.any? %>
+CONTEXT
+--------------------------------------------------------------------------------
+<% @occurrence.context.each do |key, value| %>
+<%= key.to_s.ljust(20) %> <%= value %>
+<% end %>
+
+<% end %>
+BACKTRACE
+--------------------------------------------------------------------------------
+<% @occurrence.parsed_backtrace.lines.each_with_index do |line, i| %>
+<% if line.filtered_file %>
+<%= i.zero? ? '>>>' : '   ' %> <%= File.join(File.dirname(line.filtered_file), File.basename(line.filtered_file)) %>:<%= line.filtered_number %> in <%= line.filtered_method %>
+<% else %>
+<%= i.zero? ? '>>>' : '   ' %> <%= line.unparsed_line %>
+<% end %>
+<% end %>

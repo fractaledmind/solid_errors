@@ -22,6 +22,20 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     assert_includes email.html_part.body.to_s, "oof"
   end
 
+  test "the error email links to the occurrence when the app has a mailer host" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+    ActionMailer::Base.default_url_options = {host: "errors.example.com"}
+
+    email = SolidErrors::ErrorMailer.error_occurred(occurrence)
+
+    url = "http://errors.example.com/solid_errors/#{occurrence.error_id}#occurrence_#{occurrence.id}"
+    assert_includes email.html_part.body.to_s, %(href="#{url}")
+    assert_includes email.text_part.body.to_s, url
+  ensure
+    ActionMailer::Base.default_url_options = {}
+  end
+
   test "a failed delivery is recorded without sending another email" do
     with_failing_delivery do
       report_raised_error("oof")

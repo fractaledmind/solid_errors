@@ -18,6 +18,7 @@ module SolidErrors
   mattr_accessor :email_every_occurrence, default: true
   mattr_accessor :destroy_after
   mattr_accessor :ignored_errors, default: []
+  mattr_writer :url_helper_name, :url_options
 
   class << self
     # use method instead of attr_accessor to ensure
@@ -43,6 +44,31 @@ module SolidErrors
       yield
     ensure
       ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails] = previous
+    end
+
+    def url_helper_name
+      @url_helper_name ||= detect_url_helper_name
+    end
+
+    def url_options
+      @url_options ||= detect_url_options
+    end
+
+    private
+
+    def find_solid_errors_route
+      @solid_errors_route ||= Rails.application.routes.routes.find do |r|
+        r.name&.to_s&.end_with?("solid_errors")
+      end
+    end
+
+    def detect_url_helper_name
+      find_solid_errors_route&.name&.to_sym || :solid_errors
+    end
+
+    def detect_url_options
+      subdomain = find_solid_errors_route&.constraints&.dig(:subdomain)
+      subdomain.is_a?(String) ? {subdomain: subdomain} : {}
     end
   end
 end

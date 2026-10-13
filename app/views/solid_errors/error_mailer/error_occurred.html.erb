@@ -2,16 +2,169 @@
 <head>
   <title>Solid Errors | <%= @error.severity_emoji %> <%= @error.exception_class %></title>
   <%= render "layouts/solid_errors/style" %>
+  <style>
+    body {
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .email-header {
+      margin-bottom: 16px;
+    }
+    .email-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+    }
+    .email-header h1 a {
+      color: #1f2937;
+      text-decoration: none;
+    }
+    .email-header h1 a:hover {
+      text-decoration: underline;
+    }
+    .email-link {
+      font-size: 14px;
+      color: #2563eb;
+      text-decoration: none;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .error-message {
+      background: #f3f4f6;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    .info-table {
+      width: auto;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .info-table td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .info-table td:first-child {
+      font-weight: 600;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    .backtrace {
+      background: #1e293b;
+      color: #fff;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-x: auto;
+    }
+    .backtrace-line {
+      margin: 2px 0;
+    }
+    .backtrace-highlight {
+      background: #374151;
+      margin-left: -12px;
+      margin-right: -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .context-table {
+      width: auto;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .context-table th {
+      background: #f3f4f6;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+      border: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+    .context-table td {
+      padding: 6px 8px;
+      border: 1px solid #e5e7eb;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .context-table td:first-child {
+      white-space: nowrap;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin: 16px 0 8px 0;
+    }
+  </style>
 </head>
 <body>
-  <%= render "solid_errors/errors/error",
-        error: @error,
-        show_actions: false %>
 
-  <br>
-  <br>
+  <div class="email-header">
+    <h1>
+      <%= @error.severity_emoji %>
+      <%= @error.exception_class %>
+      from <em><%= @error.source %></em>
+    </h1>
+    <% if (url = occurrence_url) %>
+      <a href="<%= url %>" class="email-link">View in Solid Errors &rarr;</a>
+    <% end %>
+  </div>
 
-  <%= render "solid_errors/occurrences/occurrence",
-        occurrence: @occurrence %>
+  <div class="error-message"><%= @error.message %></div>
+
+  <table class="info-table">
+    <tr>
+      <td>Severity</td>
+      <td><%= @error.severity_emoji %> <%= @error.severity %></td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td><%= @error.status_emoji %> <%= @error.status %></td>
+    </tr>
+    <tr>
+      <td>Occurred at</td>
+      <td><%= @occurrence.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+    </tr>
+  </table>
+
+  <% if @occurrence.context&.any? %>
+    <div class="section-title">Context</div>
+    <table class="context-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @occurrence.context.each do |key, value| %>
+          <tr>
+            <td><%= key %></td>
+            <td><%= value %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <div class="section-title">Backtrace</div>
+  <div class="backtrace">
+    <% @occurrence.parsed_backtrace.lines.each_with_index do |line, i| %>
+      <div class="backtrace-line <%= i.zero? ? 'backtrace-highlight' : '' %>">
+        <% if line.filtered_file %>
+<span style="color: #9ca3af;"><%= File.dirname(line.filtered_file) %>/</span><span style="color: #60a5fa; font-weight: 500;"><%= File.basename(line.filtered_file) %></span>:<span style="color: #fff; font-weight: 500;"><%= line.filtered_number %></span> <span style="color: #9ca3af;">in</span> <span style="color: #34d399;"><%= line.filtered_method %></span>
+        <% else %>
+<span style="color: #9ca3af;"><%= line.unparsed_line %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </body>
 </html>
