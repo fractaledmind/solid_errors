@@ -55,6 +55,12 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "the dashboard links back to the host app's root" do
+    get solid_errors.errors_path
+
+    assert_select "main a[href='/']", text: "← Back to main app"
+  end
+
   private
 
   def report_errors(count)
