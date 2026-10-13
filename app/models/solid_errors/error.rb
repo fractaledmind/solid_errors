@@ -30,6 +30,8 @@ module SolidErrors
     scope :resolved, -> { where.not(resolved_at: nil) }
     scope :unresolved, -> { where(resolved_at: nil) }
 
+    after_update_commit :publish_resolved, if: -> { saved_change_to_resolved_at? && resolved? }
+
     def severity_emoji
       SEVERITY_TO_EMOJI[severity.to_sym]
     end
@@ -52,6 +54,47 @@ module SolidErrors
 
     def resolved?
       resolved_at.present?
+    end
+
+    def to_markdown
+      md = ""
+      md << "## Exception: #{exception_class}\n"
+      md << "**Severity:** #{severity} | **Source:** #{source}\n\n"
+      md << "### Message\n#{message}\n"
+
+      occurrence = occurrences.order(created_at: :desc).first
+      return md unless occurrence
+
+      backtrace = occurrence.parsed_backtrace
+
+      md << "\n### Backtrace\n"
+      backtrace.lines.each do |line|
+        md << (line.filtered_method ? line.to_s : line.unparsed_line) << "\n"
+      end
+
+      app_lines = backtrace.application_lines
+      if app_lines.any?
+        md << "\n### Source Context\n"
+        app_lines.each do |line|
+          md << "#### #{line}\n"
+          md << "```ruby\n"
+          line.source.each { |n, code| md << "#{n}: #{code.chomp}\n" }
+          md << "```\n\n"
+        end
+      end
+
+      if occurrence.context.present?
+        md << "### Request Context\n"
+        occurrence.context.each { |k, v| md << "- #{k}: #{v}\n" }
+      end
+
+      md
+    end
+
+    private
+
+    def publish_resolved
+      ActiveSupport::Notifications.instrument("error_resolved.solid_errors", error: self)
     end
   end
 end

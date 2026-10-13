@@ -32,15 +32,18 @@ module SolidErrors
       }
       fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
       if (record = SolidErrors::Error.find_by(fingerprint: fingerprint))
+        opens_error = :reopened if record.resolved?
         record.update!(resolved_at: nil, updated_at: Time.now)
       else
+        opens_error = :created
         record = SolidErrors::Error.create!(error_attributes.merge(fingerprint: fingerprint))
       end
 
       SolidErrors::Occurrence.create(
         error_id: record.id,
         backtrace: error.backtrace&.join("\n"),
-        context: s(context)
+        context: s(context),
+        opens_error: opens_error
       )
     end
 
@@ -49,7 +52,7 @@ module SolidErrors
     end
 
     def ignore_by_class?(error_class_name)
-      IGNORED_ERRORS.any? do |ignored_class|
+      [*IGNORED_ERRORS, *SolidErrors.ignored_errors].any? do |ignored_class|
         ignored_class_name = ignored_class.respond_to?(:name) ? ignored_class.name : ignored_class
 
         ignored_class_name == error_class_name
