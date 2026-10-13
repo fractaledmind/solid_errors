@@ -36,6 +36,16 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [solid_errors.error_path(@error, items: 1, page: 2)] * 2, pagination_hrefs
   end
 
+  test "inline styles and scripts carry the content security policy nonce" do
+    get solid_errors.error_path(@error)
+
+    nonce = response.headers["Content-Security-Policy"][/style-src [^;]*'nonce-([^']+)'/, 1]
+    assert nonce
+    inline_tags = css_select("style, script:not([src])")
+    assert_not_empty inline_tags
+    inline_tags.each { |tag| assert_equal nonce, tag["nonce"], tag.to_html[0, 40] }
+  end
+
   private
 
   def report_errors(count)

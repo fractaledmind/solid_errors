@@ -30,6 +30,15 @@ module Dummy
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # A strict, nonce-based policy, so the engine's inline tags must carry the nonce
+    config.content_security_policy do |policy|
+      policy.default_src :self
+      policy.script_src :self
+      policy.style_src :self
+    end
+    config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+    config.content_security_policy_nonce_directives = %w[script-src style-src]
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
