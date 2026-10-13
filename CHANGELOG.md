@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Say in the error email subject when a resolved error was reopened, and add `email_subject` to build the subject yourself ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/109))
+
 ## [0.8.0] - 2026-10-13
 
 - Add `enabled` to turn off error tracking in an environment, such as test ([@kulturbande](https://github.com/fractaledmind/solid_errors/pull/96))

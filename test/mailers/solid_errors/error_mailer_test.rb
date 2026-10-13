@@ -2,6 +2,7 @@ require "test_helper"
 
 class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
   DeliveryFailed = Class.new(StandardError)
+  DEFAULT_EMAIL_SUBJECT = SolidErrors.email_subject
 
   class FailingDelivery
     def initialize(_settings)
@@ -42,6 +43,25 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
 
     assert_equal "⚠️ StandardError", SolidErrors::ErrorMailer.error_occurred(occurrence).subject
     assert_equal "⚠️ StandardError (reopened)", SolidErrors::ErrorMailer.error_occurred(occurrence, :reopened).subject
+  end
+
+  test "the subject can be built by the app, before the prefix" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+    received = nil
+    SolidErrors.email_subject_prefix = "[App]"
+    SolidErrors.email_subject = ->(**args) {
+      received = args
+      "#{args[:error].exception_class} (#{args[:error].occurrences.where(id: ..args[:occurrence].id).count.ordinalize})"
+    }
+
+    email = SolidErrors::ErrorMailer.error_occurred(occurrence, :created)
+
+    assert_equal "[App] StandardError (1st)", email.subject
+    assert_equal({error: occurrence.error, occurrence: occurrence, reason: :created}, received)
+  ensure
+    SolidErrors.email_subject_prefix = nil
+    SolidErrors.email_subject = DEFAULT_EMAIL_SUBJECT
   end
 
   test "a reopened error is emailed as reopened" do
