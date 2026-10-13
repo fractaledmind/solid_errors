@@ -194,6 +194,31 @@ Running Solid Errors in a separate database is recommended, but it's also possib
 
 You won't have multiple databases, so `database.yml` doesn't need to have the errors database configuration.
 
+#### Apps that use `schema_format = :sql`
+
+The installer writes `db/errors_schema.rb`, but an app with `config.active_record.schema_format = :sql` looks for `db/errors_structure.sql` for the errors database.
+
+On Rails 8.1 and later, keep the Ruby schema for the errors database only by setting `schema_format` on it in `config/database.yml`:
+
+```yaml
+production:
+  errors:
+    <<: *default
+    database: storage/production_errors.sqlite3
+    migrations_paths: db/errors_migrate
+    schema_format: ruby
+```
+
+On earlier Rails versions, create the errors database, load the Ruby schema into it, and dump it as SQL for your database adapter:
+
+```sh
+bin/rails db:create:errors
+bin/rails runner 'ActiveRecord::Tasks::DatabaseTasks.load_schema(ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "errors"), :ruby, "db/errors_schema.rb")'
+bin/rails db:schema:dump:errors
+```
+
+This writes `db/errors_structure.sql`, which you commit in place of `db/errors_schema.rb`.
+
 #### Disabling error tracking
 
 Solid Errors is enabled by default. If you want to disable error tracking in a specific environment, you can set `enabled` to `false`:
