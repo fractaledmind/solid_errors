@@ -1,6 +1,15 @@
 module SolidErrors
   # adapted from: https://github.com/codergeek121/email_error_reporter/blob/main/lib/email_error_reporter/error_mailer.rb
   class ErrorMailer < (defined?(ActionMailer::Base) ? ActionMailer::Base : Object)
+    if defined?(ActionMailer::Base)
+      # A failure here reported as usual would email again and fail again, without end
+      rescue_from StandardError do |exception|
+        SolidErrors.without_emails do
+          Rails.error.report(exception, handled: true, source: "solid_errors.error_mailer")
+        end
+      end
+    end
+
     def error_occurred(occurrence)
       unless defined?(ActionMailer::Base)
         raise "ActionMailer is not available. Make sure that you require \"action_mailer/railtie\" in application.rb"

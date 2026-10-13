@@ -153,17 +153,20 @@ end
 
 ### Configuration
 
-You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, 6 configuration options are available:
+You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, the following configuration options are available:
 
+* `enabled` - Enable or disable error tracking. Defaults to `true`. See [Disabling error tracking](#disabling-error-tracking) for more information.
 * `connects_to` - The database configuration to use for the Solid Errors database. See [Database Configuration](#database-configuration) for more information.
 * `username` - The username to use for HTTP authentication. See [Authentication](#authentication) for more information.
 * `password` - The password to use for HTTP authentication. See [Authentication](#authentication) for more information.
 * `sends_email` - Whether or not to send emails when an error occurs. See [Email notifications](#email-notifications) for more information.
 * `email_from` - The email address to send a notification from. See [Email notifications](#email-notifications) for more information.
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
+* `email_every_occurrence` - Whether to email every occurrence (the default), or only new errors and resolved errors that occur again. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
+* `ignored_errors` - Error classes, or their names, to never record, in addition to the built-in list in `SolidErrors::Subscriber::IGNORED_ERRORS`. For example, `config.solid_errors.ignored_errors = ["ActiveStorage::FileNotFoundError"]`.
 
 ### Database Configuration
 
@@ -190,6 +193,42 @@ Running Solid Errors in a separate database is recommended, but it's also possib
 3. Migrate your database.
 
 You won't have multiple databases, so `database.yml` doesn't need to have the errors database configuration.
+
+#### Apps that use `schema_format = :sql`
+
+The installer writes `db/errors_schema.rb`, but an app with `config.active_record.schema_format = :sql` looks for `db/errors_structure.sql` for the errors database.
+
+On Rails 8.1 and later, keep the Ruby schema for the errors database only by setting `schema_format` on it in `config/database.yml`:
+
+```yaml
+production:
+  errors:
+    <<: *default
+    database: storage/production_errors.sqlite3
+    migrations_paths: db/errors_migrate
+    schema_format: ruby
+```
+
+On earlier Rails versions, create the errors database, load the Ruby schema into it, and dump it as SQL for your database adapter:
+
+```sh
+bin/rails db:create:errors
+bin/rails runner 'ActiveRecord::Tasks::DatabaseTasks.load_schema(ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: "errors"), :ruby, "db/errors_schema.rb")'
+bin/rails db:schema:dump:errors
+```
+
+This writes `db/errors_structure.sql`, which you commit in place of `db/errors_schema.rb`.
+
+#### Disabling error tracking
+
+Solid Errors is enabled by default. If you want to disable error tracking in a specific environment, you can set `enabled` to `false`:
+
+```ruby
+# config/environments/development.rb
+config.solid_errors.enabled = false
+```
+
+When disabled, Solid Errors will not subscribe to the Rails error reporter and no errors will be recorded.
 
 #### Authentication
 
@@ -251,6 +290,31 @@ config.solid_errors.email_subject_prefix = "[#{Rails.application.name}][#{Rails.
 ```
 
 If you have set `send_emails` to `true` and have set an `email_to` address, Solid Errors will send an email notification whenever an error occurs. If you have not set `send_emails` to `true` or have not set an `email_to` address, Solid Errors will not send any email notifications.
+
+To be emailed only when an error is new, or when a resolved error occurs again, rather than for every occurrence:
+
+```ruby
+config.solid_errors.email_every_occurrence = false # defaults to true
+```
+
+#### Lifecycle events
+
+Solid Errors publishes [Active Support notifications](https://guides.rubyonrails.org/active_support_instrumentation.html) once each change is committed, so you can send errors to Slack, a webhook or anywhere else:
+
+| Event | When | Payload |
+| --- | --- | --- |
+| `error_created.solid_errors` | An error is recorded for the first time | `:error`, `:occurrence` |
+| `error_reopened.solid_errors` | A resolved error occurs again | `:error`, `:occurrence` |
+| `error_resolved.solid_errors` | An error is marked as resolved | `:error` |
+| `occurrence_created.solid_errors` | Any occurrence is recorded, including those above | `:error`, `:occurrence` |
+
+```ruby
+# config/initializers/solid_errors.rb
+ActiveSupport::Notifications.subscribe(/\Aerror_(created|reopened)\.solid_errors\z/) do |event|
+  error = event.payload[:error]
+  SlackNotifier.post("#{error.exception_class}: #{error.message}")
+end
+```
 
 #### Automatically destroying old records
 
@@ -376,4 +440,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the SolidErrors project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fractaledmind/solid_errors/blob/main/CODE_OF_CONDUCT.md).
-

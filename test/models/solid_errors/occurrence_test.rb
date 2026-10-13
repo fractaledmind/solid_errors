@@ -39,6 +39,18 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
     end
   end
 
+  test "context reads back as a hash when the database reports its json column as text" do
+    # MariaDB aliases JSON to LONGTEXT, so Rails sees a text column there
+    ActiveRecord::Base.connection.change_column :solid_errors_occurrences, :context, :text
+    SolidErrors::Occurrence.reset_column_information
+
+    Rails.error.report(StandardError.new("oof"), context: {user_id: 1})
+
+    assert_equal({"user_id" => 1}, SolidErrors::Occurrence.last.reload.context)
+  ensure
+    SolidErrors::Occurrence.reset_column_information
+  end
+
   private
 
   def simulate_99_old_exceptions(status)
