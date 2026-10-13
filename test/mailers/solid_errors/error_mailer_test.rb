@@ -36,6 +36,19 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     ActionMailer::Base.default_url_options = {}
   end
 
+  test "the error email links with configured url options" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+    SolidErrors.url_options = {host: "admin.example.com", protocol: "https"}
+
+    email = SolidErrors::ErrorMailer.error_occurred(occurrence)
+
+    url = "https://admin.example.com/solid_errors/#{occurrence.error_id}#occurrence_#{occurrence.id}"
+    assert_includes email.html_part.body.to_s, %(href="#{url}")
+  ensure
+    SolidErrors.url_options = nil
+  end
+
   test "a failed delivery is recorded without sending another email" do
     with_failing_delivery do
       report_raised_error("oof")
