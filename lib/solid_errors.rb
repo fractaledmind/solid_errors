@@ -16,6 +16,7 @@ module SolidErrors
   mattr_accessor :email_to
   mattr_accessor :email_subject_prefix
   mattr_accessor :destroy_after
+  mattr_accessor :ignored_errors, default: []
 
   class << self
     # use method instead of attr_accessor to ensure
