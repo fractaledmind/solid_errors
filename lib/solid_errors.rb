@@ -15,6 +15,7 @@ module SolidErrors
   mattr_accessor :email_from, default: "solid_errors@noreply.com"
   mattr_accessor :email_to
   mattr_accessor :email_subject_prefix
+  mattr_accessor :email_every_occurrence, default: true
   mattr_accessor :destroy_after
   mattr_accessor :ignored_errors, default: []
 
