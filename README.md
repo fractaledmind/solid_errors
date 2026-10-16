@@ -279,14 +279,14 @@ Solid Errors _can_ send email notifications whenever an error occurs, if your ap
 
 There are two ways to configure email notifications. First, you can use environment variables:
 
-```ruby
-ENV["SOLIDERRORS_SEND_EMAILS"] = true # defaults to false
-ENV["SOLIDERRORS_EMAIL_FROM"] = "errors@myapp.com" # defaults to "solid_errors@noreply.com"
-ENV["SOLIDERRORS_EMAIL_TO"] = "devs@myapp.com" # no default, must be set
-ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"] = "[Application name][Environment]" # no default, optional
+```sh
+SOLIDERRORS_SEND_EMAILS=true # defaults to false
+SOLIDERRORS_EMAIL_FROM=errors@myapp.com # defaults to solid_errors@noreply.com
+SOLIDERRORS_EMAIL_TO=devs@myapp.com # no default, must be set
+SOLIDERRORS_EMAIL_SUBJECT_PREFIX="[Application name][Environment]" # no default, optional
 ```
 
-Second, you can set the values via the configuration object:
+Second, you can set the values via the configuration object, which takes precedence over the environment variables:
 
 ```ruby
 # Set authentication credentials and optional subject prefix for Solid Errors

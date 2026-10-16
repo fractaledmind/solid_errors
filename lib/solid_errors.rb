@@ -11,10 +11,7 @@ module SolidErrors
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
   mattr_writer :password
-  mattr_accessor :send_emails, default: false
-  mattr_accessor :email_from, default: "solid_errors@noreply.com"
-  mattr_accessor :email_to
-  mattr_accessor :email_subject_prefix
+  mattr_writer :send_emails, :email_from, :email_to, :email_subject_prefix, default: nil
   mattr_accessor :email_every_occurrence, default: true
   mattr_accessor :destroy_after
   mattr_accessor :ignored_errors, default: []
@@ -31,6 +28,23 @@ module SolidErrors
     # this works if ENV variable set after SolidErrors is loaded
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
+    end
+
+    # Each email setting falls back to its SOLIDERRORS_* environment variable when not configured
+    def send_emails
+      @@send_emails.nil? ? ActiveModel::Type::Boolean.new.cast(ENV["SOLIDERRORS_SEND_EMAILS"]) || false : @@send_emails
+    end
+
+    def email_from
+      @@email_from || ENV["SOLIDERRORS_EMAIL_FROM"] || "solid_errors@noreply.com"
+    end
+
+    def email_to
+      @@email_to || ENV["SOLIDERRORS_EMAIL_TO"]
+    end
+
+    def email_subject_prefix
+      @@email_subject_prefix || ENV["SOLIDERRORS_EMAIL_SUBJECT_PREFIX"]
     end
 
     # Whether the errors database has every table and column this version reads and writes.
