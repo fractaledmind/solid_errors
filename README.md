@@ -412,6 +412,11 @@ You can always take control of the views by creating your own views and/or parti
 </html>
 ```
 
+
+### Locales
+
+The dashboard is written in English and renders in English whenever your app allows the `:en` locale. If `config.i18n.available_locales` leaves out `:en`, the dashboard renders in your app's locale instead, and you will need to provide the `datetime.distance_in_words.short` translations from [`config/locales/en.yml`](config/locales/en.yml) in that locale.
+
 ## Sponsors
 
 <p align="center">
