@@ -35,7 +35,8 @@ module SolidErrors
     end
 
     def send_email
-      ErrorMailer.error_occurred(self).deliver_later
+      # Passed along rather than read off the occurrence, which the mailer job loads afresh without it
+      ErrorMailer.error_occurred(self, opens_error).deliver_later
     end
 
     def clear_resolved_errors
