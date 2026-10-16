@@ -1,7 +1,15 @@
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-16
+
+- Record the controller action and filtered params, or the job and its filtered arguments, with each occurrence, and store records in the context as GlobalIDs ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/115))
+- Add `SolidErrors.migrated?` to check the errors database schema in your test suite ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/113))
 - Say in the error email subject when a resolved error was reopened, and add `email_subject` to build the subject yourself, including for error emails an app sends for its own events ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/109))
 - Leave the dashboard stylesheet out of the error email ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/110))
+- Read the documented `SOLIDERRORS_SEND_EMAILS`, `SOLIDERRORS_EMAIL_FROM`, `SOLIDERRORS_EMAIL_TO` and `SOLIDERRORS_EMAIL_SUBJECT_PREFIX` environment variables ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/114))
+- Fix `url_helper_name` and `url_options` being ignored when configured ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/108))
+- Render the dashboard in apps that don't make the `:en` locale available ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/111))
+- Document the setup mistakes behind "Could not find table 'solid_errors'" ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/112))
 
 ## [0.8.0] - 2026-10-13
 
