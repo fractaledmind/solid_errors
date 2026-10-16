@@ -154,6 +154,17 @@ Rails.error.handle(context: { user_id: user.id }, severity: :info) do
 end
 ```
 
+
+### What each occurrence records
+
+Every occurrence stores the backtrace and the error's context. Rails adds the current request or job to that context, and Solid Errors records it as:
+
+* **Requests:** the controller action (`UsersController#show`) and its params, with your `config.filter_parameters` applied.
+* **Background jobs:** the job class, its id and queue, and its arguments, also filtered.
+
+Any Active Record object in the context is stored as its [GlobalID](https://github.com/rails/globalid) (`gid://my-app/User/1`), so you can tell which record was involved. Add your own context with `Rails.error.set_context(...)` or the `context:` option shown above.
+
+Errors raised in background jobs reach Solid Errors when your job backend runs jobs inside the Rails executor, as Solid Queue, Sidekiq and GoodJob do. You don't need any extra setup for this.
 ### Configuration
 
 You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, the following configuration options are available:

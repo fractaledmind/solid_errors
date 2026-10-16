@@ -49,6 +49,10 @@ module SolidErrors
       when String
         sanitize_string(data)
       else # all other objects
+        if (global_id = global_id(data))
+          return global_id
+        end
+
         klass = data.class
 
         begin
@@ -66,6 +70,15 @@ module SolidErrors
     private
 
     attr_reader :max_depth
+
+    # A saved record is identified by its GlobalID (gid://app/User/1) instead of just its class
+    def global_id(object)
+      return unless object.respond_to?(:to_global_id)
+
+      object.to_global_id.to_s
+    rescue
+      nil
+    end
 
     def basic_object?(object)
       object.respond_to?(:to_s)
