@@ -23,6 +23,16 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     assert_includes email.html_part.body.to_s, "oof"
   end
 
+  # The email styles itself inline. The dashboard's Tailwind build is tens of kilobytes
+  # it never uses, and Gmail clips a message past about a hundred.
+  test "the error email leaves out the dashboard stylesheet" do
+    report_raised_error("oof")
+
+    email = SolidErrors::ErrorMailer.error_occurred(SolidErrors::Occurrence.last)
+
+    refute_includes email.html_part.body.to_s, "tailwindcss"
+  end
+
   test "the error email links to the occurrence when the app has a mailer host" do
     report_raised_error("oof")
     occurrence = SolidErrors::Occurrence.last
@@ -85,6 +95,19 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
         report_raised_error("oof")
       end
     end
+  end
+
+  test "the error email links with configured url options" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+    SolidErrors.url_options = {host: "admin.example.com", protocol: "https"}
+
+    email = SolidErrors::ErrorMailer.error_occurred(occurrence)
+
+    url = "https://admin.example.com/solid_errors/#{occurrence.error_id}#occurrence_#{occurrence.id}"
+    assert_includes email.html_part.body.to_s, %(href="#{url}")
+  ensure
+    SolidErrors.url_options = nil
   end
 
   test "a failed delivery is recorded without sending another email" do

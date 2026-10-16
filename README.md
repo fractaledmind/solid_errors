@@ -79,6 +79,9 @@ production:
 
 Then run `db:prepare` in production to ensure the database is created and the schema is loaded.
 
+> [!WARNING]
+> Use `db:prepare`, not `db:create` followed by `db:migrate`. Solid Errors ships a schema rather than migrations, so `db:migrate` leaves the errors database empty and then dumps that empty schema over `db/errors_schema.rb`. If that has happened, copy the schema back from [the install template](lib/generators/solid_errors/install/templates/db/errors_schema.rb) and run `db:prepare` again.
+
 Then mount the engine in your `config/routes.rb` file:
 ```ruby
 authenticate :user, -> (user) { user.admin? } do
@@ -231,6 +234,10 @@ config.solid_errors.enabled = false
 
 When disabled, Solid Errors will not subscribe to the Rails error reporter and no errors will be recorded.
 
+Disable it in every environment that loads the gem but has no errors database, such as development or test. Otherwise Solid Errors records errors to the primary database, fails with `Could not find table 'solid_errors'`, and in development and test that failure can hide the error you were looking for.
+
+Configuration belongs in `config/environments/<environment>.rb`, not in `config/<environment>.rb`, which Rails does not load.
+
 #### Authentication
 
 Solid Errors does not restrict access out of the box. You must secure the dashboard yourself. However, it does provide basic HTTP authentication that can be used with basic authentication or Devise. All you need to do is setup a username and password.
@@ -357,6 +364,21 @@ config.solid_errors.destroy_after = 30.days
 config.solid_errors.destroy_after = 6.months
 ```
 
+#### Checking the schema after an upgrade
+
+When a release changes the schema, [UPGRADE.md](UPGRADE.md) describes the migration. To have your test suite fail until you've applied it, assert that the errors database has everything the installed version uses:
+
+```ruby
+# test/solid_errors_test.rb
+require "test_helper"
+
+class SolidErrorsTest < ActiveSupport::TestCase
+  test "the errors database is up to date" do
+    assert SolidErrors.migrated?
+  end
+end
+```
+
 ### Examples
 
 There are only two screens in the dashboard.
@@ -438,6 +460,11 @@ You can always take control of the views by creating your own views and/or parti
   </body>
 </html>
 ```
+
+
+### Locales
+
+The dashboard is written in English and renders in English whenever your app allows the `:en` locale. If `config.i18n.available_locales` leaves out `:en`, the dashboard renders in your app's locale instead, and you will need to provide the `datetime.distance_in_words.short` translations from [`config/locales/en.yml`](config/locales/en.yml) in that locale.
 
 ## Sponsors
 

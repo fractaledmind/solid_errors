@@ -1,6 +1,6 @@
 module SolidErrors
   class ErrorsController < ApplicationController
-    around_action :force_english_locale!
+    around_action :use_english_when_available
 
     before_action :set_error, only: %i[show update destroy]
 
@@ -53,7 +53,10 @@ module SolidErrors
       @error = Error.find(params[:id])
     end
 
-    def force_english_locale!(&action)
+    # The dashboard's strings ship in English only; apps that don't allow :en keep their own locale
+    def use_english_when_available(&action)
+      return action.call unless I18n.locale_available?(:en)
+
       I18n.with_locale(:en, &action)
     end
 
