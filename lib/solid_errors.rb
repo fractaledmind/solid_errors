@@ -33,6 +33,17 @@ module SolidErrors
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
     end
 
+    # Whether the errors database has every table and column this version reads and writes.
+    # Assert it in your test suite to catch a schema change you haven't applied yet.
+    def migrated?
+      {
+        SolidErrors::Error => %w[exception_class message severity source resolved_at fingerprint created_at updated_at],
+        SolidErrors::Occurrence => %w[error_id backtrace context created_at updated_at]
+      }.all? do |model, columns|
+        model.table_exists? && (columns - model.column_names).empty?
+      end
+    end
+
     def send_emails?
       send_emails && email_to.present? && !ActiveSupport::IsolatedExecutionState[:solid_errors_without_emails]
     end

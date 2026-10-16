@@ -337,6 +337,21 @@ config.solid_errors.destroy_after = 30.days
 config.solid_errors.destroy_after = 6.months
 ```
 
+#### Checking the schema after an upgrade
+
+When a release changes the schema, [UPGRADE.md](UPGRADE.md) describes the migration. To have your test suite fail until you've applied it, assert that the errors database has everything the installed version uses:
+
+```ruby
+# test/solid_errors_test.rb
+require "test_helper"
+
+class SolidErrorsTest < ActiveSupport::TestCase
+  test "the errors database is up to date" do
+    assert SolidErrors.migrated?
+  end
+end
+```
+
 ### Examples
 
 There are only two screens in the dashboard.
