@@ -79,6 +79,9 @@ production:
 
 Then run `db:prepare` in production to ensure the database is created and the schema is loaded.
 
+> [!WARNING]
+> Use `db:prepare`, not `db:create` followed by `db:migrate`. Solid Errors ships a schema rather than migrations, so `db:migrate` leaves the errors database empty and then dumps that empty schema over `db/errors_schema.rb`. If that has happened, copy the schema back from [the install template](lib/generators/solid_errors/install/templates/db/errors_schema.rb) and run `db:prepare` again.
+
 Then mount the engine in your `config/routes.rb` file:
 ```ruby
 authenticate :user, -> (user) { user.admin? } do
@@ -229,6 +232,10 @@ config.solid_errors.enabled = false
 ```
 
 When disabled, Solid Errors will not subscribe to the Rails error reporter and no errors will be recorded.
+
+Disable it in every environment that loads the gem but has no errors database, such as development or test. Otherwise Solid Errors records errors to the primary database, fails with `Could not find table 'solid_errors'`, and in development and test that failure can hide the error you were looking for.
+
+Configuration belongs in `config/environments/<environment>.rb`, not in `config/<environment>.rb`, which Rails does not load.
 
 #### Authentication
 
