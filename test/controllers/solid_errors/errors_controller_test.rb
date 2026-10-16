@@ -85,6 +85,22 @@ class SolidErrors::ErrorsControllerTest < ActionDispatch::IntegrationTest
     assert_select "main a[href='/']", text: "← Back to main app"
   end
 
+  test "the dashboard renders in apps that do not make English available" do
+    available_locales, default_locale, locale = I18n.available_locales, I18n.default_locale, I18n.locale
+    I18n.available_locales = [:fr]
+    I18n.default_locale = I18n.locale = :fr
+
+    get solid_errors.errors_path
+    assert_response :success
+
+    get solid_errors.error_path(@error)
+    assert_response :success
+  ensure
+    I18n.available_locales = available_locales
+    I18n.default_locale = default_locale
+    I18n.locale = locale
+  end
+
   private
 
   def report_errors(count)
