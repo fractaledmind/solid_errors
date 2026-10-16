@@ -12,13 +12,15 @@ module SolidErrors
       helper_method :occurrence_url
     end
 
-    def error_occurred(occurrence)
+    # reason is passed on to SolidErrors.email_subject: :created or :reopened when the occurrence
+    # opened its error, or whatever an app sending this email for its own events passes
+    def error_occurred(occurrence, reason = nil)
       unless defined?(ActionMailer::Base)
         raise "ActionMailer is not available. Make sure that you require \"action_mailer/railtie\" in application.rb"
       end
       @occurrence = occurrence
       @error = occurrence.error
-      subject = "#{@error.severity_emoji} #{@error.exception_class}"
+      subject = SolidErrors.email_subject.call(error: @error, occurrence: @occurrence, reason: reason&.to_sym)
       if SolidErrors.email_subject_prefix.present?
         subject = [SolidErrors.email_subject_prefix, subject].join(" ").squish!
       end

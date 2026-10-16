@@ -167,6 +167,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_to` - The email address(es) to send a notification to. See [Email notifications](#email-notifications) for more information.
 * `email_every_occurrence` - Whether to email every occurrence (the default), or only new errors and resolved errors that occur again. See [Email notifications](#email-notifications) for more information.
 * `email_subject_prefix` - Prefix added to the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
+* `email_subject` - A proc that builds the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
 * `ignored_errors` - Error classes, or their names, to never record, in addition to the built-in list in `SolidErrors::Subscriber::IGNORED_ERRORS`. For example, `config.solid_errors.ignored_errors = ["ActiveStorage::FileNotFoundError"]`.
@@ -302,6 +303,32 @@ To be emailed only when an error is new, or when a resolved error occurs again, 
 
 ```ruby
 config.solid_errors.email_every_occurrence = false # defaults to true
+```
+
+The subject names the error, and says when a resolved error has occurred again (`🔥 TimeoutError (reopened)`). To build it yourself, set `email_subject` to a proc. It is called with the error, the occurrence, and `reason`: `:created` or `:reopened` when the occurrence opened its error, `nil` for any other. `email_subject_prefix` is still added in front of what it returns.
+
+```ruby
+config.solid_errors.email_subject = ->(error:, occurrence:, reason:) {
+  # Counting up to this occurrence, rather than all of them, gives the same answer however late the email is sent
+  count = error.occurrences.where(id: ..occurrence.id).count
+  subject = "#{error.severity_emoji} #{error.exception_class}"
+
+  case reason
+  when :reopened then "🔄 REOPENED: #{subject}"
+  when :resolved then "✅ RESOLVED: #{error.exception_class}"
+  else count.in?([10, 100, 1_000]) ? "#{subject} (#{count.ordinalize} occurrence)" : subject
+  end
+}
+```
+
+The error email can also be sent for events of your own, such as an error being resolved or occurring unusually often. Whatever reason you pass reaches `email_subject`, as `:resolved` does in the example above:
+
+```ruby
+# config/initializers/solid_errors.rb
+ActiveSupport::Notifications.subscribe("error_resolved.solid_errors") do |event|
+  occurrence = event.payload[:error].occurrences.last
+  SolidErrors::ErrorMailer.error_occurred(occurrence, :resolved).deliver_later if occurrence && SolidErrors.send_emails?
+end
 ```
 
 #### Lifecycle events

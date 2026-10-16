@@ -2,6 +2,7 @@ require "test_helper"
 
 class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
   DeliveryFailed = Class.new(StandardError)
+  DEFAULT_EMAIL_SUBJECT = SolidErrors.email_subject
 
   class FailingDelivery
     def initialize(_settings)
@@ -46,6 +47,56 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     ActionMailer::Base.default_url_options = {}
   end
 
+  test "the subject says when an error was reopened" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+
+    assert_equal "⚠️ StandardError", SolidErrors::ErrorMailer.error_occurred(occurrence).subject
+    assert_equal "⚠️ StandardError (reopened)", SolidErrors::ErrorMailer.error_occurred(occurrence, :reopened).subject
+  end
+
+  test "the subject can be built by the app, before the prefix" do
+    report_raised_error("oof")
+    occurrence = SolidErrors::Occurrence.last
+    received = nil
+    SolidErrors.email_subject_prefix = "[App]"
+    SolidErrors.email_subject = ->(**args) {
+      received = args
+      "#{args[:error].exception_class} (#{args[:error].occurrences.where(id: ..args[:occurrence].id).count.ordinalize})"
+    }
+
+    email = SolidErrors::ErrorMailer.error_occurred(occurrence, :created)
+
+    assert_equal "[App] StandardError (1st)", email.subject
+    assert_equal({error: occurrence.error, occurrence: occurrence, reason: :created}, received)
+  ensure
+    SolidErrors.email_subject_prefix = nil
+    SolidErrors.email_subject = DEFAULT_EMAIL_SUBJECT
+  end
+
+  test "an app sending the email for its own event gets its reason in the subject proc" do
+    report_raised_error("oof")
+    SolidErrors.email_subject = ->(error:, occurrence:, reason:) { "#{error.exception_class} #{reason}" }
+
+    email = SolidErrors::ErrorMailer.error_occurred(SolidErrors::Occurrence.last, :resolved)
+
+    assert_equal "StandardError resolved", email.subject
+  ensure
+    SolidErrors.email_subject = DEFAULT_EMAIL_SUBJECT
+  end
+
+  test "a reopened error is emailed as reopened" do
+    with_emails do
+      report_raised_error("oof")
+      SolidErrors::Error.last.update!(resolved_at: Time.current)
+
+      assert_enqueued_email_with SolidErrors::ErrorMailer, :error_occurred,
+        args: ->(args) { args.last == :reopened } do
+        report_raised_error("oof")
+      end
+    end
+  end
+
   test "the error email links with configured url options" do
     report_raised_error("oof")
     occurrence = SolidErrors::Occurrence.last
@@ -85,15 +136,20 @@ class SolidErrors::ErrorMailerTest < ActionMailer::TestCase
     Rails.error.report(error)
   end
 
-  def with_failing_delivery
-    delivery_method = ActionMailer::Base.delivery_method
+  def with_emails
     SolidErrors.send_emails = true
     SolidErrors.email_to = "ops@example.com"
-    ActionMailer::Base.delivery_method = :failing
     yield
   ensure
     SolidErrors.send_emails = false
     SolidErrors.email_to = nil
+  end
+
+  def with_failing_delivery
+    delivery_method = ActionMailer::Base.delivery_method
+    ActionMailer::Base.delivery_method = :failing
+    with_emails { yield }
+  ensure
     ActionMailer::Base.delivery_method = delivery_method
   end
 end
