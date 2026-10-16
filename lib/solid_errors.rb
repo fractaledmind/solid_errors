@@ -47,11 +47,11 @@ module SolidErrors
     end
 
     def url_helper_name
-      @url_helper_name ||= detect_url_helper_name
+      @@url_helper_name ||= detect_url_helper_name
     end
 
     def url_options
-      @url_options ||= detect_url_options
+      @@url_options ||= detect_url_options
     end
 
     private
