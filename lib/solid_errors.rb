@@ -21,6 +21,11 @@ module SolidErrors
   }
   mattr_accessor :destroy_after
   mattr_accessor :ignored_errors, default: []
+  # What an error is grouped by: occurrences whose text is the same are one error. Called with the exception and the
+  # attributes stored for it; the default is the class, message, severity and source, as every version before it
+  mattr_accessor :fingerprint, default: ->(error:, attributes:) {
+    attributes.values_at(:exception_class, :message, :severity, :source).join
+  }
   # Request params and job arguments carry user content that filter_parameters' key matching misses
   mattr_accessor :record_params, default: false
   mattr_accessor :record_arguments, default: false

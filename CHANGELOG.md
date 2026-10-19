@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add `fingerprint` to choose what an error is grouped by, and record the message each occurrence was raised with in its context ([@namolnad](https://github.com/fractaledmind/solid_errors/pull/121))
+
 ## [0.9.1] - 2026-10-19
 
 - Record request params and job arguments only when `record_params` or `record_arguments` is set. 0.9.0 recorded and emailed them for every occurrence, filtered only by `filter_parameters`, which misses positional arguments, mail delivery jobs and webhook payloads. If that matters for your app, review occurrences recorded under 0.9.0 ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/120))

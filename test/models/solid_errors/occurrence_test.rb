@@ -46,7 +46,7 @@ class SolidErrors::OccurrenceTest < ActiveSupport::TestCase
 
     Rails.error.report(StandardError.new("oof"), context: {user_id: 1})
 
-    assert_equal({"user_id" => 1}, SolidErrors::Occurrence.last.reload.context)
+    assert_equal({"message" => "oof", "user_id" => 1}, SolidErrors::Occurrence.last.reload.context)
   ensure
     SolidErrors::Occurrence.reset_column_information
   end

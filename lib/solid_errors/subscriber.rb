@@ -30,7 +30,7 @@ module SolidErrors
         severity: severity,
         source: source
       }
-      fingerprint = Digest::SHA256.hexdigest(error_attributes.values.join)
+      fingerprint = Digest::SHA256.hexdigest(SolidErrors.fingerprint.call(error: error, attributes: error_attributes).to_s)
       if (record = SolidErrors::Error.find_by(fingerprint: fingerprint))
         opens_error = :reopened if record.resolved?
         record.update!(resolved_at: nil, updated_at: Time.now)
@@ -42,7 +42,8 @@ module SolidErrors
       SolidErrors::Occurrence.create(
         error_id: record.id,
         backtrace: error.backtrace&.join("\n"),
-        context: s(readable_context(context)),
+        # The message as raised, which the error keeps only for the occurrence that created it
+        context: s({message: error.message}.merge(readable_context(context))),
         opens_error: opens_error
       )
     end
