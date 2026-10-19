@@ -157,14 +157,21 @@ end
 
 ### What each occurrence records
 
-Every occurrence stores the backtrace and the error's context. Rails adds the current request or job to that context, and Solid Errors records it as:
+Every occurrence stores the backtrace and the error's context. Rails adds the current request or job to that context, and Solid Errors records which one it was: the controller action (`UsersController#show`), or the job's class, id and queue.
 
-* **Requests:** the controller action (`UsersController#show`) and its params, with your `config.filter_parameters` applied.
-* **Background jobs:** the job class, its id and queue, and its arguments, also filtered.
+Request params and job arguments are not recorded unless you opt in, because they often carry user content that `config.filter_parameters` can't catch: it matches keys, so positional job arguments, mail delivery jobs (the mail's recipients and body) and webhook payloads would be stored and emailed as they are.
+
+```ruby
+config.solid_errors.record_params = true    # the request's params, with filter_parameters applied
+config.solid_errors.record_arguments = true # the job's arguments, with filter_parameters applied
+```
+
+Context you set yourself takes precedence. For example, `Rails.error.set_context(params: ...)` in a `before_action` replaces the recorded params.
 
 Any Active Record object in the context is stored as its [GlobalID](https://github.com/rails/globalid) (`gid://my-app/User/1`), so you can tell which record was involved. Add your own context with `Rails.error.set_context(...)` or the `context:` option shown above.
 
 Errors raised in background jobs reach Solid Errors when your job backend runs jobs inside the Rails executor, as Solid Queue, Sidekiq and GoodJob do. You don't need any extra setup for this.
+
 ### Configuration
 
 You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, the following configuration options are available:
@@ -181,6 +188,7 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `email_subject` - A proc that builds the subject line for email notifications. See [Email notifications](#email-notifications) for more information.
 * `base_controller_class` - Specify a different controller as the base class for the Solid Errors controller. See [Authentication](#authentication) for more information.
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
+* `record_params` / `record_arguments` - Whether to record request params and job arguments with each occurrence. Both default to `false`. See [What each occurrence records](#what-each-occurrence-records).
 * `ignored_errors` - Error classes, or their names, to never record, in addition to the built-in list in `SolidErrors::Subscriber::IGNORED_ERRORS`. For example, `config.solid_errors.ignored_errors = ["ActiveStorage::FileNotFoundError"]`.
 
 ### Database Configuration
