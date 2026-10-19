@@ -157,7 +157,7 @@ end
 
 ### What each occurrence records
 
-Every occurrence stores the backtrace and the error's context. Rails adds the current request or job to that context, and Solid Errors records which one it was: the controller action (`UsersController#show`), or the job's class, id and queue.
+Every occurrence stores the backtrace, the message it was raised with (as `message` in its context) and the error's context. Rails adds the current request or job to that context, and Solid Errors records which one it was: the controller action (`UsersController#show`), or the job's class, id and queue.
 
 Request params and job arguments are not recorded unless you opt in, because they often carry user content that `config.filter_parameters` can't catch: it matches keys, so positional job arguments, mail delivery jobs (the mail's recipients and body) and webhook payloads would be stored and emailed as they are.
 
@@ -190,6 +190,22 @@ You can configure Solid Errors via the Rails configuration object, under the `so
 * `destroy_after` - If set, Solid Errors will periodically destroy resolved records that are older than the value specified. See [Automatically destroying old records](#automatically-destroying-old-records) for more information.
 * `record_params` / `record_arguments` - Whether to record request params and job arguments with each occurrence. Both default to `false`. See [What each occurrence records](#what-each-occurrence-records).
 * `ignored_errors` - Error classes, or their names, to never record, in addition to the built-in list in `SolidErrors::Subscriber::IGNORED_ERRORS`. For example, `config.solid_errors.ignored_errors = ["ActiveStorage::FileNotFoundError"]`.
+* `fingerprint` - A proc that returns what an error is grouped by. See [Grouping occurrences into errors](#grouping-occurrences-into-errors) for more information.
+
+#### Grouping occurrences into errors
+
+Occurrences are grouped into one error when their exception class, message, severity and source are all the same. When a message carries something that changes every time, such as a request id, each occurrence becomes an error of its own, and one outage shows up as hundreds of errors with one occurrence each.
+
+To group them, set `fingerprint` to a proc. It is called with the exception and the attributes stored for it (`exception_class`, `message`, `severity` and `source`), and the occurrences whose procs return the same string are one error:
+
+```ruby
+config.solid_errors.fingerprint = ->(error:, attributes:) {
+  message = attributes[:message].gsub(/\breq_[A-Za-z0-9]+/, "req_*")
+  [attributes[:exception_class], message, attributes[:severity], attributes[:source]].join
+}
+```
+
+Only the grouping changes. The error keeps the message it was first reported with, and every occurrence records the message it was raised with in its context, so each id is still there to look up. Without the setting, errors are grouped exactly as before, so upgrading never regroups existing errors. Setting it does: an error recorded before then gets a new fingerprint, so its next occurrence starts a new error.
 
 ### Database Configuration
 
