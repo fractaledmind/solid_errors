@@ -1190,4 +1190,189 @@
       padding-right: 0.75rem
     }
   }
+
+  /*
+  Dark mode follows the operating system. Rather than adding `dark:` variants to
+  the markup, it remaps the light utilities above to their dark counterparts, so
+  the views and the classes the backtrace toggle swaps stay the same.
+  */
+
+  :root{
+    color-scheme: light dark
+  }
+
+  @media (prefers-color-scheme: dark){
+    *, ::before, ::after{
+      border-color: #374151
+    }
+
+    body{
+      background-color: rgb(17 24 39);
+      color: rgb(229 231 235)
+    }
+
+    .divide-gray-300 > :not([hidden]) ~ :not([hidden]){
+      --tw-divide-opacity: 1;
+      border-color: rgb(55 65 81 / var(--tw-divide-opacity))
+    }
+
+    .border-black{
+      --tw-border-opacity: 1;
+      border-color: rgb(209 213 219 / var(--tw-border-opacity))
+    }
+
+    .border-blue-500{
+      --tw-border-opacity: 1;
+      border-color: rgb(96 165 250 / var(--tw-border-opacity))
+    }
+
+    .border-gray-300{
+      --tw-border-opacity: 1;
+      border-color: rgb(75 85 99 / var(--tw-border-opacity))
+    }
+
+    .border-red-500{
+      --tw-border-opacity: 1;
+      border-color: rgb(248 113 113 / var(--tw-border-opacity))
+    }
+
+    .bg-gray-100{
+      --tw-bg-opacity: 1;
+      background-color: rgb(31 41 55 / var(--tw-bg-opacity))
+    }
+
+    .bg-green-50{
+      --tw-bg-opacity: 1;
+      background-color: rgb(5 46 22 / var(--tw-bg-opacity))
+    }
+
+    .bg-red-50{
+      --tw-bg-opacity: 1;
+      background-color: rgb(69 10 10 / var(--tw-bg-opacity))
+    }
+
+    .bg-white{
+      --tw-bg-opacity: 1;
+      background-color: rgb(17 24 39 / var(--tw-bg-opacity))
+    }
+
+    .text-black{
+      --tw-text-opacity: 1;
+      color: rgb(243 244 246 / var(--tw-text-opacity))
+    }
+
+    .bg-blue-100{
+      background-color: rgb(30 58 138 / 0.5)
+    }
+
+    .bg-red-100{
+      background-color: rgb(127 29 29 / 0.5)
+    }
+
+    .bg-yellow-100{
+      background-color: rgb(113 63 18 / 0.5)
+    }
+
+    .bg-green-100{
+      background-color: rgb(20 83 45 / 0.5)
+    }
+
+    .bg-violet-100{
+      background-color: rgb(76 29 149 / 0.5)
+    }
+
+    .text-blue-500{
+      --tw-text-opacity: 1;
+      color: rgb(96 165 250 / var(--tw-text-opacity))
+    }
+
+    .text-gray-500{
+      --tw-text-opacity: 1;
+      color: rgb(156 163 175 / var(--tw-text-opacity))
+    }
+
+    .text-gray-900{
+      --tw-text-opacity: 1;
+      color: rgb(243 244 246 / var(--tw-text-opacity))
+    }
+
+    .text-green-500{
+      --tw-text-opacity: 1;
+      color: rgb(74 222 128 / var(--tw-text-opacity))
+    }
+
+    .text-red-500{
+      --tw-text-opacity: 1;
+      color: rgb(248 113 113 / var(--tw-text-opacity))
+    }
+
+    .text-blue-800{
+      --tw-text-opacity: 1;
+      color: rgb(191 219 254 / var(--tw-text-opacity))
+    }
+
+    .text-red-800{
+      --tw-text-opacity: 1;
+      color: rgb(254 202 202 / var(--tw-text-opacity))
+    }
+
+    .text-yellow-800{
+      --tw-text-opacity: 1;
+      color: rgb(254 240 138 / var(--tw-text-opacity))
+    }
+
+    .text-green-800{
+      --tw-text-opacity: 1;
+      color: rgb(187 247 208 / var(--tw-text-opacity))
+    }
+
+    .text-violet-800{
+      --tw-text-opacity: 1;
+      color: rgb(221 214 254 / var(--tw-text-opacity))
+    }
+
+    .even\:bg-gray-50:nth-child(even){
+      background-color: rgb(31 41 55 / 0.5)
+    }
+
+    .hover\:bg-gray-50:hover{
+      --tw-bg-opacity: 1;
+      background-color: rgb(31 41 55 / var(--tw-bg-opacity))
+    }
+
+    .hover\:ring-blue-200:hover{
+      --tw-ring-opacity: 1;
+      --tw-ring-color: rgb(30 58 138 / var(--tw-ring-opacity))
+    }
+
+    .hover\:ring-gray-200:hover{
+      --tw-ring-opacity: 1;
+      --tw-ring-color: rgb(55 65 81 / var(--tw-ring-opacity))
+    }
+
+    .hover\:ring-red-200:hover{
+      --tw-ring-opacity: 1;
+      --tw-ring-color: rgb(127 29 29 / var(--tw-ring-opacity))
+    }
+
+    .hover\:bg-black:hover{
+      --tw-bg-opacity: 1;
+      background-color: rgb(243 244 246 / var(--tw-bg-opacity))
+    }
+
+    .hover\:text-white:hover{
+      --tw-text-opacity: 1;
+      color: rgb(17 24 39 / var(--tw-text-opacity))
+    }
+
+    .hover\:text-gray-700:hover{
+      --tw-text-opacity: 1;
+      color: rgb(229 231 235 / var(--tw-text-opacity))
+    }
+
+    .hover\:border-gray-300:hover{
+      --tw-border-opacity: 1;
+      border-color: rgb(107 114 128 / var(--tw-border-opacity))
+    }
+  }
 </style>
