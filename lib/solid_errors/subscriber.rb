@@ -52,13 +52,13 @@ module SolidErrors
       context = context.dup
       if defined?(ActionController::Metal) && (controller = context[:controller]).is_a?(ActionController::Metal)
         context[:controller] = "#{controller.class.name}##{controller.action_name}"
-        context[:params] ||= controller.request.filtered_parameters.except("controller", "action")
+        context[:params] ||= controller.request.filtered_parameters.except("controller", "action") if SolidErrors.record_params
       end
       if defined?(ActiveJob::Base) && (job = context[:job]).is_a?(ActiveJob::Base)
         context[:job] = job.class.name
         context[:job_id] ||= job.job_id
         context[:queue] ||= job.queue_name
-        context[:arguments] ||= parameter_filter.filter(arguments: s(job.arguments))[:arguments]
+        context[:arguments] ||= parameter_filter.filter(arguments: s(job.arguments))[:arguments] if SolidErrors.record_arguments
       end
       context
     end

@@ -21,6 +21,9 @@ module SolidErrors
   }
   mattr_accessor :destroy_after
   mattr_accessor :ignored_errors, default: []
+  # Request params and job arguments carry user content that filter_parameters' key matching misses
+  mattr_accessor :record_params, default: false
+  mattr_accessor :record_arguments, default: false
   mattr_writer :url_helper_name, :url_options
 
   class << self
