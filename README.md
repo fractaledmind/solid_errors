@@ -171,6 +171,7 @@ Context you set yourself takes precedence. For example, `Rails.error.set_context
 Any Active Record object in the context is stored as its [GlobalID](https://github.com/rails/globalid) (`gid://my-app/User/1`), so you can tell which record was involved. Add your own context with `Rails.error.set_context(...)` or the `context:` option shown above.
 
 Errors raised in background jobs reach Solid Errors when your job backend runs jobs inside the Rails executor, as Solid Queue, Sidekiq and GoodJob do. You don't need any extra setup for this.
+
 ### Configuration
 
 You can configure Solid Errors via the Rails configuration object, under the `solid_errors` key. Currently, the following configuration options are available:
