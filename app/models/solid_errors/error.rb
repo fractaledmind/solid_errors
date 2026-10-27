@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidErrors
   class Error < Record
     self.table_name = "solid_errors"
@@ -57,7 +59,7 @@ module SolidErrors
     end
 
     def to_markdown
-      md = ""
+      md = +""
       md << "## Exception: #{exception_class}\n"
       md << "**Severity:** #{severity} | **Source:** #{source}\n\n"
       md << "### Message\n#{message}\n"
