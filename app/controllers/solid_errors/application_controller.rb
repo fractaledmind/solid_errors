@@ -8,13 +8,13 @@ module SolidErrors
     # adapted from: https://github.com/ddnexus/pagy/blob/master/gem/lib/pagy.rb
     OverflowError = Class.new(StandardError)
     class Page
-      attr_reader :count, :items, :pages, :first, :last, :prev, :next, :offset, :from, :to
+      attr_reader :page, :count, :items, :pages, :first, :last, :prev, :next, :offset, :from, :to
 
       def initialize(collection, params)
         @count = collection.count
-        @items = (params[:items] || 20).to_i
+        @items = [(params[:items] || 20).to_i, 1].max
         @pages = [(@count.to_f / @items).ceil, 1].max
-        @page = ((page = (params[:page] || 1).to_i) > @pages) ? @pages : page
+        @page = (params[:page] || 1).to_i.clamp(1, @pages)
         @first = (1 unless @page == 1)
         @last = (@pages unless @page == @pages)
         @prev = (@page - 1 unless @page == 1)

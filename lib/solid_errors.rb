@@ -11,6 +11,7 @@ module SolidErrors
   mattr_accessor :base_controller_class, default: "::ActionController::Base"
   mattr_writer :username
   mattr_writer :password
+  mattr_writer :api_key
   mattr_writer :send_emails, :email_from, :email_to, :email_subject_prefix, default: nil
   mattr_accessor :email_every_occurrence, default: true
   # Builds the error email's subject, before email_subject_prefix. reason is :created or :reopened when
@@ -37,6 +38,11 @@ module SolidErrors
     # this works if ENV variable set after SolidErrors is loaded
     def password
       @password ||= ENV["SOLIDERRORS_PASSWORD"] || @@password
+    end
+
+    # The JSON API is off until a key is set
+    def api_key
+      @@api_key.presence || ENV["SOLIDERRORS_API_KEY"]
     end
 
     # Each email setting falls back to its SOLIDERRORS_* environment variable when not configured
