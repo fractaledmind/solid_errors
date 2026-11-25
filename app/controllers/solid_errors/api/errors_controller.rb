@@ -30,14 +30,19 @@ module SolidErrors
 
         render json: error_json(@error).merge(
           markdown: @error.to_markdown,
-          occurrences: occurrences.map { |occurrence| occurrence.slice(:id, :backtrace, :context, :created_at) },
-          pagination: {count: page.count, pages: page.pages, prev: page.prev, next: page.next}
+          occurrences: occurrences.map { |occurrence| occurrence_json(occurrence) },
+          pagination: {page: page.page, count: page.count, pages: page.pages, prev: page.prev, next: page.next}
         )
       end
 
       # PATCH/PUT /api/errors/1
       def update
-        @error.update!(params.require(:error).permit(:resolved_at))
+        case resolved_param
+        when "true" then @error.update!(resolved_at: Time.current)
+        when "false" then @error.update!(resolved_at: nil)
+        else return render(json: {error: 'Send {"error": {"resolved": true}} to resolve or false to reopen.'}, status: 422)
+        end
+
         render json: error_json(@error)
       end
 
@@ -56,17 +61,26 @@ module SolidErrors
       def authenticate
         return head(:not_found) if SolidErrors.api_key.blank?
 
-        authenticate_or_request_with_http_token do |token|
+        authenticated = authenticate_with_http_token do |token|
           ActiveSupport::SecurityUtils.secure_compare(token, SolidErrors.api_key)
         end
+        render json: {error: "Unauthorized"}, status: :unauthorized unless authenticated
       end
 
       def set_error
         @error = Error.find(params[:id])
       end
 
+      def resolved_param
+        params[:error][:resolved].to_s if params[:error].is_a?(ActionController::Parameters)
+      end
+
       def error_json(error)
         error.slice(:id, :exception_class, :message, :severity, :source, :resolved_at)
+      end
+
+      def occurrence_json(occurrence)
+        occurrence.slice(:id, :context, :created_at).merge(backtrace: occurrence.parsed_backtrace.lines.map(&:to_s))
       end
     end
   end

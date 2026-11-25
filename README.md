@@ -299,23 +299,28 @@ config.solid_errors.base_controller_class = "YourAdminController"
 Solid Errors also serves the dashboard as JSON, for scripts and agents that read and resolve errors. It is off until you set a key, either with the `SOLIDERRORS_API_KEY` environment variable or in your configuration:
 
 ```ruby
-config.solid_errors.api_key = Rails.application.credentials.solid_errors.api_key
+config.solid_errors.api_key = Rails.application.credentials.dig(:solid_errors, :api_key)
 ```
 
-Requests send the key as a bearer token. Paths are relative to where you mount the engine:
+Requests send the key as a bearer token, and a body as JSON. Paths are relative to where you mount the engine:
 
 ```sh
 curl -H "Authorization: Bearer $SOLIDERRORS_API_KEY" https://example.com/solid_errors/api/errors
+
+curl -X PATCH -H "Authorization: Bearer $SOLIDERRORS_API_KEY" -H "Content-Type: application/json" \
+  -d '{"error": {"resolved": true}}' https://example.com/solid_errors/api/errors/1
 ```
 
 | Request | Response |
 | --- | --- |
 | `GET /api/errors` | `{errors}`: the unresolved errors, latest occurrence first, each with `occurrences_count`, `first_seen_at` and `last_seen_at`; `?scope=resolved` lists the resolved ones |
-| `GET /api/errors/:id` | the error with its `markdown` and a page of its `occurrences`, latest first; `?page=` and `?items=` work as on the dashboard and `pagination` says where you are |
-| `PATCH /api/errors/:id` with `{"error": {"resolved_at": "2026-11-25T12:00:00Z"}}` | the error; a `null` `resolved_at` reopens it |
+| `GET /api/errors/:id` | the error with its `markdown` and a page of its `occurrences`, latest first, each with its filtered `backtrace` and `context`; `?page=` and `?items=` work as on the dashboard, and `pagination` gives the `page`, `pages`, `prev` and `next` |
+| `PATCH /api/errors/:id` with `{"error": {"resolved": true}}` | the error, resolved now; `false` reopens it, anything else is refused with `422` |
 | `DELETE /api/errors/:id` | `204`; an unresolved error is refused with `422`, as on the dashboard |
 
-The API checks only the key: it does not inherit from `base_controller_class` and ignores `username` and `password`. Route constraints around the mount, such as Devise's `authenticate`, still apply to it.
+A wrong or missing key gets `401` and an unknown error `404`, both with an `error` message in JSON.
+
+The API checks only the key: it does not inherit from `base_controller_class` and ignores `username` and `password`. Route constraints around the mount still apply to it, so behind a constraint that needs a session, such as Devise's `authenticate`, the API can't be reached with a key alone. To use it, mount the engine outside the constraint and protect the dashboard with `username` and `password` or `base_controller_class` instead.
 
 #### Email notifications
 

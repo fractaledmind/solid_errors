@@ -42,7 +42,7 @@ module SolidErrors
 
     # The JSON API is off until a key is set
     def api_key
-      @@api_key || ENV["SOLIDERRORS_API_KEY"]
+      @@api_key.presence || ENV["SOLIDERRORS_API_KEY"]
     end
 
     # Each email setting falls back to its SOLIDERRORS_* environment variable when not configured
