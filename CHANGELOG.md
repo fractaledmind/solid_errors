@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add a JSON API to list, read, resolve and delete errors, off until `api_key` is set ([@marostr](https://github.com/fractaledmind/solid_errors/pull/125))
+
 ## [0.9.1] - 2026-10-19
 
 - Record request params and job arguments only when `record_params` or `record_arguments` is set. 0.9.0 recorded and emailed them for every occurrence, filtered only by `filter_parameters`, which misses positional arguments, mail delivery jobs and webhook payloads. If that matters for your app, review occurrences recorded under 0.9.0 ([@fractaledmind](https://github.com/fractaledmind/solid_errors/pull/120))
