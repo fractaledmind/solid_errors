@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Add a JSON API to list, read, resolve and delete errors, off until `api_key` is set ([@marostr](https://github.com/fractaledmind/solid_errors/pull/125))
+- Fix the error page raising on `items=0` and offsetting below the first occurrence on `page=0` ([@marostr](https://github.com/fractaledmind/solid_errors/pull/125))
 
 ## [0.9.1] - 2026-10-19
 
